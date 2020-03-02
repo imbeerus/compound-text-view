@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="CompoundTextView">
+        <attr name="useCustomTransformation" format="boolean" />
+        <attr name="handleClickWithinDrawableBounds" format="boolean" />
+
+        <!-- Font/Text sensitive attrs attrs -->
+        <attr name="includeFontMetricsPadding" format="boolean" />
+        <attr name="drawableAttachedToText" format="integer">
+            <flag name="top" value="1" />
+            <flag name="bottom" value="2" />
+            <flag name="all" value="3" />
+        </attr>
+
+        <!-- Drawable attrs for all postilions -->
+        <attr name="drawableTint" format="color" />
+        <attr name="drawableSize" format="dimension" />
+        <attr name="drawablePadding" format="dimension" />
+        <attr name="drawableGravity" format="integer">
+            <flag name="start" value="8388611" />
+            <flag name="top" value="48" />
+            <flag name="bottom" value="80" />
+            <flag name="end" value="8388613" />
+            <flag name="center" value="17" />
+            <flag name="center_horizontal" value="1" />
+            <flag name="center_vertical" value="16" />
+        </attr>
+
+        <!-- Drawable attrs for START -->
+        <attr name="drawableStart" format="reference" />
+        <attr name="drawableStartTint" format="color" />
+        <attr name="drawableStartSize" format="dimension" />
+        <attr name="drawableStartPadding" format="dimension" />
+        <attr name="drawableStartGravity" format="integer">
+            <flag name="start" value="8388611" />
+            <flag name="top" value="48" />
+            <flag name="bottom" value="80" />
+            <flag name="end" value="8388613" />
+            <flag name="center" value="17" />
+            <flag name="center_horizontal" value="1" />
+            <flag name="center_vertical" value="16" />
+        </attr>
+
+        <!-- Drawable attrs for END -->
+        <attr name="drawableEnd" format="reference" />
+        <attr name="drawableEndTint" format="color" />
+        <attr name="drawableEndSize" format="dimension" />
+        <attr name="drawableEndPadding" format="dimension" />
+        <attr name="drawableEndGravity" format="integer">
+            <flag name="start" value="8388611" />
+            <flag name="top" value="48" />
+            <flag name="bottom" value="80" />
+            <flag name="end" value="8388613" />
+            <flag name="center" value="17" />
+            <flag name="center_horizontal" value="1" />
+            <flag name="center_vertical" value="16" />
+        </attr>
+
+        <!-- Drawable attrs for TOP -->
+        <attr name="drawableTop" format="reference" />
+        <attr name="drawableTopTint" format="color" />
+        <attr name="drawableTopSize" format="dimension" />
+        <attr name="drawableTopPadding" format="dimension" />
+        <attr name="drawableTopGravity" format="integer">
+            <flag name="start" value="8388611" />
+            <flag name="top" value="48" />
+            <flag name="bottom" value="80" />
+            <flag name="end" value="8388613" />
+            <flag name="center" value="17" />
+            <flag name="center_horizontal" value="1" />
+            <flag name="center_vertical" value="16" />
+        </attr>
+
+        <!-- Drawable attrs for BOTTOM -->
+        <attr name="drawableBottom" format="reference" />
+        <attr name="drawableBottomTint" format="color" />
+        <attr name="drawableBottomSize" format="dimension" />
+        <attr name="drawableBottomPadding" format="dimension" />
+        <attr name="drawableBottomGravity" format="integer">
+            <flag name="start" value="8388611" />
+            <flag name="top" value="48" />
+            <flag name="bottom" value="80" />
+            <flag name="end" value="8388613" />
+            <flag name="center" value="17" />
+            <flag name="center_horizontal" value="1" />
+            <flag name="center_vertical" value="16" />>
+        </attr>
+
+    </declare-styleable>
+
+</resources>

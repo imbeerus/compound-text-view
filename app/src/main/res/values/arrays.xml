@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="gravity">
+        <item>Default</item>
+        <item>Start</item>
+        <item>Top</item>
+        <item>Bottom</item>
+        <item>End</item>
+        <item>Center</item>
+        <item>Center_horizontal</item>
+        <item>Center_vertical</item>
+    </string-array>
+
+    <string-array name="attached_to_text">
+        <item>Default</item>
+        <item>Top</item>
+        <item>Bottom</item>
+        <item>All</item>
+    </string-array>
+
+    <string-array name="padding">
+        <item>Default</item>
+        <item>4</item>
+        <item>8</item>
+        <item>16</item>
+        <item>24</item>
+        <item>32</item>
+    </string-array>
+
+</resources>
