@@ -16,6 +16,23 @@ Change gravity of Image Drawable in TextView 🌌
 * CompoundViewClickListener
 * Right-to-left Support
 
+## Download
+Download the [latest release][1] or grab via Gradle:
+
+```
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+```
+dependencies {
+        implementation 'com.github.lndmflngs:compound-text-view:1.0.0'
+}
+```
+
 ## Usage
 The simplest way is to use `CompoundTextView` like a normal `TextView`
 
@@ -30,6 +47,13 @@ The simplest way is to use `CompoundTextView` like a normal `TextView`
     app:drawableStart="@drawable/image"
     app:text="Item" />
 ```
+
+### Loading images
+There are several libraries that follow best practices for loading images. You can use these libraries in your app to load images in the most optimized manner. I recommend Glide, but you can use others: Picasso, Coil.
+
+**Examples**: [Glide][5], [Picasso][6], [Coil][7]
+
+**Data binding**: you can use [this][10] adapter
 
 ### CompoundTextView Attrs
 
@@ -50,32 +74,7 @@ Attributes | Type | Default | Description
 
 *contains individual attr for each position (eg: drawableStartTint, drawableTopTint and etc.)
 
-There are several libraries that follow best practices for loading images.  
-You can use these libraries in your app to load images in the most optimized manner.  
-I recommend Glide, but you can use others: Picasso, Coil.
-
-**Examples**: [Glide][5], [Picasso][6], [Coil][7]
-
-**Data binding**: you can use [this][10] adapter
-
 For more information see [documentation][11]
-
-## Download
-Download the [latest release][1] or grab via Gradle:
-
-```
-allprojects {
-    repositories {
-        ...
-        maven { url 'https://jitpack.io' }
-    }
-}
-```
-```
-dependencies {
-        implementation 'com.github.lndmflngs:compound-text-view:1.0.0'
-}
-```
 
 ## Credits
 Images provided by [kivnor][8]
