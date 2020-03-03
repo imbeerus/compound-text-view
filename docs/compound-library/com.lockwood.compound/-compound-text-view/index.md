@@ -92,16 +92,3 @@ Zinovyev Ivan
 | [tintProperty](tint-property.md) | Make property that store tint for drawable at specific [position](tint-property.md#com.lockwood.compound.CompoundTextView$tintProperty(kotlin.Function0((kotlin.Int)))/position) in [drawablesTint](drawables-tint.md)`fun tintProperty(position: () -> `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`): CompoundArrayPositionProperty<`[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`>` |
 | [updateCompoundDrawables](update-compound-drawables.md) | Update compound drawables and set them with [setCompoundDrawablesRelativeWithIntrinsicBounds](#)`fun updateCompoundDrawables(): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
 | [updateDrawablesProperty](update-drawables-property.md) | Make drawable related property (store [T](update-drawables-property.md#T) and call [updateCompoundDrawables](update-compound-drawables.md) on set)`fun <T> updateDrawablesProperty(default: () -> T): CompoundDrawableProperty<T>` |
-
-### Companion Object Properties
-
-| Name | Summary |
-|---|---|
-| [DEF_ATTACHED_TO_TEXT](-d-e-f_-a-t-t-a-c-h-e-d_-t-o_-t-e-x-t.md) | `const val DEF_ATTACHED_TO_TEXT: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
-| [DEF_GRAVITY](-d-e-f_-g-r-a-v-i-t-y.md) | `const val DEF_GRAVITY: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
-| [DEF_HANDLE_CLICK_WITHIN_DRAWABLE_BOUNDS](-d-e-f_-h-a-n-d-l-e_-c-l-i-c-k_-w-i-t-h-i-n_-d-r-a-w-a-b-l-e_-b-o-u-n-d-s.md) | `const val DEF_HANDLE_CLICK_WITHIN_DRAWABLE_BOUNDS: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
-| [DEF_INCLUDE_FONT_PADDING](-d-e-f_-i-n-c-l-u-d-e_-f-o-n-t_-p-a-d-d-i-n-g.md) | `const val DEF_INCLUDE_FONT_PADDING: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |
-| [DEF_PADDING](-d-e-f_-p-a-d-d-i-n-g.md) | `const val DEF_PADDING: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
-| [DEF_SIZE](-d-e-f_-s-i-z-e.md) | `const val DEF_SIZE: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
-| [DEF_TINT_COLOR](-d-e-f_-t-i-n-t_-c-o-l-o-r.md) | `const val DEF_TINT_COLOR: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
-| [DEF_USE_CUSTOM_TRANSFORMATION](-d-e-f_-u-s-e_-c-u-s-t-o-m_-t-r-a-n-s-f-o-r-m-a-t-i-o-n.md) | `const val DEF_USE_CUSTOM_TRANSFORMATION: `[`Boolean`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html) |

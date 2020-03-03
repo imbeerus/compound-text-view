@@ -1362,14 +1362,22 @@ open class CompoundTextView @JvmOverloads constructor(
 
         private val TAG = CompoundTextView::class.java.simpleName
 
+        /** @suppress */
         const val DEF_USE_CUSTOM_TRANSFORMATION = false
+        /** @suppress */
         const val DEF_HANDLE_CLICK_WITHIN_DRAWABLE_BOUNDS = false
+        /** @suppress */
         const val DEF_INCLUDE_FONT_PADDING = false
 
+        /** @suppress */
         const val DEF_GRAVITY = Gravity.NO_GRAVITY
+        /** @suppress */
         const val DEF_ATTACHED_TO_TEXT = AttachedToText.NO
+        /** @suppress */
         const val DEF_PADDING = 0
+        /** @suppress */
         const val DEF_SIZE = 0
+        /** @suppress */
         const val DEF_TINT_COLOR = -1
 
         private const val DEF_DRAWABLES_SIZE = 4
