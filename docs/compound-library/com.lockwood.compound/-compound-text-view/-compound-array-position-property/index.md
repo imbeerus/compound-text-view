@@ -1,8 +1,8 @@
-[compound-library](../../../index.md) / [com.lockwood.compound](../../index.md) / [CompoundTextView](../index.md) / [ArrayPositionProperty](./index.md)
+[compound-library](../../../index.md) / [com.lockwood.compound](../../index.md) / [CompoundTextView](../index.md) / [CompoundArrayPositionProperty](./index.md)
 
-# ArrayPositionProperty
+# CompoundArrayPositionProperty
 
-`protected inner class ArrayPositionProperty<T> : `[`ReadWriteProperty`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.properties/-read-write-property/index.html)`<`[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`?, T>`
+`protected inner class CompoundArrayPositionProperty<T> : `[`ReadWriteProperty`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.properties/-read-write-property/index.html)`<`[`Any`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html)`?, T>`
 
 Property that store drawable related value in [array](#) at specific [position](#)
 
@@ -18,7 +18,7 @@ Property that store drawable related value in [array](#) at specific [position](
 
 | Name | Summary |
 |---|---|
-| [&lt;init&gt;](-init-.md) | Property that store drawable related value in [array](#) at specific [position](#)`ArrayPositionProperty(array: `[`Array`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html)`<T>, position: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`)` |
+| [&lt;init&gt;](-init-.md) | Property that store drawable related value in [array](#) at specific [position](#)`CompoundArrayPositionProperty(array: `[`Array`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html)`<T>, position: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)`)` |
 
 ### Functions
 

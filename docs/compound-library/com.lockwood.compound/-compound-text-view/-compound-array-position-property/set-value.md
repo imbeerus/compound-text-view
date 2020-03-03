@@ -1,4 +1,4 @@
-[compound-library](../../../index.md) / [com.lockwood.compound](../../index.md) / [CompoundTextView](../index.md) / [ArrayPositionProperty](index.md) / [setValue](./set-value.md)
+[compound-library](../../../index.md) / [com.lockwood.compound](../../index.md) / [CompoundTextView](../index.md) / [CompoundArrayPositionProperty](index.md) / [setValue](./set-value.md)
 
 # setValue
 
