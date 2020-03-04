@@ -12,9 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:text="Lorem Ipsum"
+        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas a laoreet augue, ut lobortis tortor. Praesent nunc leo, imperdiet vel consequat at, consectetur nec nunc. "
+        app:drawableSize="32dp"
         app:drawableStart="@drawable/cat"
-        app:drawableSize="18dp"
         app:handleClickWithinDrawableBounds="true" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
