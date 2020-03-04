@@ -17,12 +17,18 @@ class TintTransformation(
     @ColorRes private val colorRes: Int
 ) : DrawableTransformation {
 
-    override fun performTransformation(source: Drawable, context: Context) = try {
-        val colorInt = context.color(colorRes)
-        source.tint(colorInt)
-    } catch (e: Exception) {
-        Log.e(TAG, e.message.toString())
-        source
+    override fun performTransformation(source: Drawable, context: Context): Drawable {
+        return if (colorRes > 0) {
+            try {
+                val colorInt = context.color(colorRes)
+                source.tint(colorInt)
+            } catch (e: Exception) {
+                Log.e(TAG, e.message.toString())
+                source
+            }
+        } else {
+            source
+        }
     }
 
     private fun Drawable.tint(@ColorInt tint: Int): Drawable {
