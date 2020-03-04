@@ -23,8 +23,6 @@
             <flag name="bottom" value="80" />
             <flag name="end" value="8388613" />
             <flag name="center" value="17" />
-            <flag name="center_horizontal" value="1" />
-            <flag name="center_vertical" value="16" />
         </attr>
 
         <!-- Drawable attrs for START -->
@@ -38,8 +36,6 @@
             <flag name="bottom" value="80" />
             <flag name="end" value="8388613" />
             <flag name="center" value="17" />
-            <flag name="center_horizontal" value="1" />
-            <flag name="center_vertical" value="16" />
         </attr>
 
         <!-- Drawable attrs for END -->
@@ -53,8 +49,6 @@
             <flag name="bottom" value="80" />
             <flag name="end" value="8388613" />
             <flag name="center" value="17" />
-            <flag name="center_horizontal" value="1" />
-            <flag name="center_vertical" value="16" />
         </attr>
 
         <!-- Drawable attrs for TOP -->
@@ -68,8 +62,6 @@
             <flag name="bottom" value="80" />
             <flag name="end" value="8388613" />
             <flag name="center" value="17" />
-            <flag name="center_horizontal" value="1" />
-            <flag name="center_vertical" value="16" />
         </attr>
 
         <!-- Drawable attrs for BOTTOM -->
@@ -83,8 +75,6 @@
             <flag name="bottom" value="80" />
             <flag name="end" value="8388613" />
             <flag name="center" value="17" />
-            <flag name="center_horizontal" value="1" />
-            <flag name="center_vertical" value="16" />>
         </attr>
 
     </declare-styleable>
