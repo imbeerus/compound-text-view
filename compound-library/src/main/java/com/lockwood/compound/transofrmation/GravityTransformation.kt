@@ -2,7 +2,6 @@ package com.lockwood.compound.transofrmation
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.view.Gravity
 import com.lockwood.compound.GravityDrawable
 import com.lockwood.compound.Position
 import com.lockwood.compound.R

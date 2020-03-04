@@ -93,7 +93,7 @@ class ShowcaseTest {
         onView(withId(id)).check(matches(withSpinnerText(containsString(text))))
 
     private fun setAllDrawablesChecked() = drawablesPositions.forEach { id ->
-        onView(withId(id)).check(matches(ViewMatchers.isNotChecked())).perform(click());
+        onView(withId(id)).check(matches(ViewMatchers.isNotChecked())).perform(click())
     }
 
     companion object {

@@ -456,7 +456,6 @@ open class CompoundTextView @JvmOverloads constructor(
      * Otherwise (true) - only [GravityTransformation] will be apply
      *
      * @attr [R.styleable.CompoundTextView_useCustomTransformation]
-     * @sample RecyclerFragment (https://github.com/lndmflngs/compound-text-view/)
      */
     protected var useCustomTransformation by updateDrawablesProperty { DEF_USE_CUSTOM_TRANSFORMATION }
         /**
@@ -476,7 +475,6 @@ open class CompoundTextView @JvmOverloads constructor(
      * Otherwise (true) - handle click on [GravityDrawable.source]
      *
      * @attr [R.styleable.CompoundTextView_handleClickWithinDrawableBounds]
-     * @sample ShowcaseFragment (https://github.com/lndmflngs/compound-text-view/)
      */
 
     protected var handleClickWithinDrawableBounds by updateDrawablesProperty { DEF_HANDLE_CLICK_WITHIN_DRAWABLE_BOUNDS }
@@ -792,7 +790,7 @@ open class CompoundTextView @JvmOverloads constructor(
      * @param font is [Typeface] of text
      * @return TextPaint with applied or default args
      */
-    protected fun buildTextPaint(size: Float, font: Typeface?) = paint.apply {
+    protected fun buildTextPaint(size: Float, font: Typeface?): TextPaint = paint.apply {
         isAntiAlias = true
         textSize = size
         typeface = font
