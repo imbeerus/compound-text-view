@@ -37,8 +37,6 @@ import kotlin.math.abs
  * @param gravity of [source] drawable
  * @param innerHeight is the height at which the drawable would like to be laid out
  * @param innerWidth is the width at which the drawable would like to be laid out
- * @param topFontPadding padding of font for drawable with [Gravity.TOP]
- * @param bottomFontPadding padding of font for drawable with [Gravity.BOTTOM]
  * @param isRtl configuration or not
  */
 @SuppressLint("RestrictedApi")

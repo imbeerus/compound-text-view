@@ -4,11 +4,8 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.view.Gravity
 import androidx.annotation.Px
 import androidx.core.graphics.drawable.toBitmap
-import com.lockwood.compound.GravityDrawable
-import com.lockwood.compound.Position
 
 /**
  * A class for performing size transformation on a drawable
