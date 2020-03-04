@@ -56,6 +56,7 @@ class GravityDrawable(
      * Width of drawable
      */
     private val width: Int = source.intrinsicWidth
+
     /**
      * Height of drawable
      */
@@ -65,6 +66,7 @@ class GravityDrawable(
      * Half of drawable width
      */
     private val halfWidth = width shr 1
+
     /**
      * Half of drawable height
      */
@@ -122,9 +124,9 @@ class GravityDrawable(
      */
     private val paddingPath = Path()
 
-    override fun getIntrinsicWidth() = innerHeight
+    override fun getIntrinsicWidth() = innerWidth
 
-    override fun getIntrinsicHeight() = innerWidth
+    override fun getIntrinsicHeight() = innerHeight
 
     override fun draw(canvas: Canvas) = with(canvas) {
         // draw blank space
@@ -283,16 +285,19 @@ object AttachedToText {
      * Drawables (Top, Bottom) will be attached to the beginning/end of the view
      */
     const val NO = 0
+
     /**
      * Top drawable will be attached to the beginning/end of the text
      * Bottom drawable will be attached to the beginning/end of the view
      */
     const val TOP = 1
+
     /**
      * Bottom drawable will be attached to the beginning/end of the text
      * Top drawable will be attached to the beginning/end of the view
      */
     const val BOTTOM = 2
+
     /**
      * Drawables (Top, Bottom) will be attached to the beginning/end of the text
      */
