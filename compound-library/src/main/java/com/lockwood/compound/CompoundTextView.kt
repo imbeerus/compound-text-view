@@ -19,13 +19,10 @@ package com.lockwood.compound
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.TypedArray
-import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.text.Layout
-import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.Gravity
@@ -70,14 +67,17 @@ open class CompoundTextView @JvmOverloads constructor(
      * Array of [Int] gravity which will be used in [GravityTransformation]
      */
     protected val drawablesGravity = Array(DEF_DRAWABLES_SIZE) { DEF_GRAVITY }
+
     /**
      * Array of [Int] padding in Px size which will be used in [GravityTransformation]
      */
     protected val drawablesPadding = Array(DEF_DRAWABLES_SIZE) { DEF_PADDING }
+
     /**
      * Array of ColorRes [Int] tint which will be used in [TintTransformation]
      */
     protected val drawablesTint = Array(DEF_DRAWABLES_SIZE) { DEF_TINT_COLOR }
+
     /**
      * Array of [Int] size in Px size which will be used in [SizeTransformation]
      */
@@ -491,52 +491,6 @@ open class CompoundTextView @JvmOverloads constructor(
         set
 
     /**
-     * Is add font padding's for [startDrawable] and [endDrawable]
-     *
-     * If false, use [drawableStartPadding] and [drawableEndPadding] only
-     * Otherwise (true) - add [topFontPadding] (if [Gravity.TOP]) and [bottomFontPadding] (if [Gravity.BOTTOM]) paddings also
-     *
-     * @attr [R.styleable.CompoundTextView_includeFontMetricsPadding]
-     */
-    protected var includeFontMetricsPadding by updateDrawablesProperty { DEF_INCLUDE_FONT_PADDING }
-        /**
-         * Is add font padding's for [startDrawable] and [endDrawable]
-         */
-        get
-        /**
-         * Is add font padding's for [startDrawable] and [endDrawable], then [updateCompoundDrawables]
-         */
-        set
-
-    /**
-     * Top padding based on text view font metrics
-     *
-     * Distance between top and ascent of font metrics
-     */
-    protected open val topFontPadding: Int
-        /**
-         * Top padding based on text view font metrics
-         */
-        get() {
-            val fm = paint.fontMetricsInt
-            return abs(fm.top - fm.ascent)
-        }
-
-    /**
-     * Bottom padding based on text view font metrics
-     *
-     * Distance between bottom and descent of font metrics
-     */
-    protected open val bottomFontPadding: Int
-        /**
-         * Bottom padding based on text view font metrics
-         */
-        get() {
-            val fm = paint.fontMetricsInt
-            return fm.bottom - fm.descent
-        }
-
-    /**
      * Current padding start
      *
      * For SDK version 17+ return [getPaddingStart],
@@ -696,11 +650,6 @@ open class CompoundTextView @JvmOverloads constructor(
                     DEF_ATTACHED_TO_TEXT
                 )
 
-                includeFontMetricsPadding = getBoolean(
-                    R.styleable.CompoundTextView_includeFontMetricsPadding,
-                    DEF_INCLUDE_FONT_PADDING
-                )
-
                 useCustomTransformation = getBoolean(
                     R.styleable.CompoundTextView_useCustomTransformation,
                     DEF_USE_CUSTOM_TRANSFORMATION
@@ -721,8 +670,8 @@ open class CompoundTextView @JvmOverloads constructor(
         }
         // we use our own drawables padding in GravityDrawable
         compoundDrawablePadding = 0
-        updateCompoundDrawables()
         addTextChangedListener { updateCompoundDrawables() }
+        updateCompoundDrawables()
     }
 
     /**
@@ -733,6 +682,7 @@ open class CompoundTextView @JvmOverloads constructor(
      */
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
+
         val halfWidth = w shr 1
         val startWidth: Int
         val endWidth: Int
@@ -753,7 +703,6 @@ open class CompoundTextView @JvmOverloads constructor(
         drawables.forEachIndexed { index, drawable ->
             if ((index == TOP || index == BOTTOM) && drawable != null) {
                 val halfDrawableWidth = drawable.width shr 1
-                val drawableBounds = drawable.copyBounds()
 
                 val offset = halfDrawableWidth.minus(startWidth shr 1).plus(endWidth shr 1)
                 val paddingOffset = (textStartPadding shr 1).plus(textEndPadding shr 1)
@@ -765,11 +714,9 @@ open class CompoundTextView @JvmOverloads constructor(
                     endDrawableOffset -= endWidth
                 }
 
-                drawable.setBounds(
-                    startDrawableOffset,
-                    drawableBounds.top,
-                    endDrawableOffset,
-                    drawableBounds.bottom
+                drawable.updateBounds(
+                    left = startDrawableOffset,
+                    right = endDrawableOffset
                 )
             }
         }
@@ -852,40 +799,7 @@ open class CompoundTextView @JvmOverloads constructor(
     }
 
     /**
-     * Build [StaticLayout] for text and font related measurement
-     *
-     * @param text to measure
-     * @param size of text in Px
-     * @param font is [Typeface] of text
-     * @return TextPaint with applied or default args
-     */
-    @Suppress("DEPRECATION")
-    protected fun buildStaticLayout(text: String, size: Float, font: Typeface?): StaticLayout {
-        val textPaint = buildTextPaint(size, font)
-        val textWidth = measureTextWidth(text, size, font)
-
-        val spacingMultiplier = 1.0F
-        val spacingAddition = 0.0F
-
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            StaticLayout.Builder.obtain(text, 0, text.length, textPaint, textWidth).apply {
-                setIncludePad(includeFontMetricsPadding)
-            }.build()
-        } else {
-            StaticLayout(
-                text,
-                textPaint,
-                textWidth,
-                Layout.Alignment.ALIGN_NORMAL,
-                spacingMultiplier,
-                spacingAddition,
-                includeFontMetricsPadding
-            )
-        }
-    }
-
-    /**
-     * Measure text height with [buildStaticLayout]
+     * Measure text height with [buildTextPaint]
      *
      * @param str text to measure
      * @param size of text in Px
@@ -899,30 +813,31 @@ open class CompoundTextView @JvmOverloads constructor(
     ) = if (text.isNullOrEmpty()) {
         DEF_SIZE
     } else {
-        buildStaticLayout(str, size, font).height
+        val textBounds = Rect()
+        buildTextPaint(size, font).run {
+            getTextBounds(str, 0, str.length, textBounds)
+            measureText(str)
+        }
+        textBounds.height()
     }
 
     /**
-     * Measure text width with [buildTextPaint]
+     * Measure text height with [buildTextPaint] with lines
      *
      * @param str text to measure
      * @param size of text in Px
      * @param font is [Typeface] of text
      * @return height of text in Px or zero if text is empty
      */
-    protected open fun measureTextWidth(
+    protected open fun measureTextHeightWithLines(
         str: String = text.toString(),
         size: Float = textSize,
-        font: Typeface? = typeface,
-        paint: Paint = buildTextPaint(size, font)
+        font: Typeface? = typeface
     ) = if (text.isNullOrEmpty()) {
         DEF_SIZE
     } else {
-        val textBounds = Rect()
-        paint.run {
-            getTextBounds(str, 0, str.length, textBounds)
-            measureText(str).toInt()
-        }
+        val lineOffset = lineHeight * lineCount
+        measureTextHeight(str, size, font) + lineOffset
     }
 
     /**
@@ -961,10 +876,7 @@ open class CompoundTextView @JvmOverloads constructor(
                     position,
                     gravity,
                     padding,
-                    measureTextHeight(),
-                    topFontPadding,
-                    bottomFontPadding,
-                    includeFontMetricsPadding
+                    measureTextHeightWithLines()
                 ).performTransformation(drawable, context)
             } else {
                 null
@@ -1358,25 +1270,38 @@ open class CompoundTextView @JvmOverloads constructor(
 
     }
 
+    /**
+     * Update a bounding rectangle for the [Drawable]
+     */
+    private fun Drawable.updateBounds(
+        left: Int = bounds.left,
+        top: Int = bounds.top,
+        right: Int = bounds.right,
+        bottom: Int = bounds.bottom
+    ) = setBounds(left, top, right, bottom)
+
     companion object {
 
         private val TAG = CompoundTextView::class.java.simpleName
 
         /** @suppress */
         const val DEF_USE_CUSTOM_TRANSFORMATION = false
+
         /** @suppress */
         const val DEF_HANDLE_CLICK_WITHIN_DRAWABLE_BOUNDS = false
-        /** @suppress */
-        const val DEF_INCLUDE_FONT_PADDING = false
 
         /** @suppress */
         const val DEF_GRAVITY = Gravity.NO_GRAVITY
+
         /** @suppress */
         const val DEF_ATTACHED_TO_TEXT = AttachedToText.NO
+
         /** @suppress */
         const val DEF_PADDING = 0
+
         /** @suppress */
         const val DEF_SIZE = 0
+
         /** @suppress */
         const val DEF_TINT_COLOR = -1
 

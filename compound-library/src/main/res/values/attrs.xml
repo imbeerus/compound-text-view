@@ -6,7 +6,6 @@
         <attr name="handleClickWithinDrawableBounds" format="boolean" />
 
         <!-- Font/Text sensitive attrs attrs -->
-        <attr name="includeFontMetricsPadding" format="boolean" />
         <attr name="drawableAttachedToText" format="integer">
             <flag name="top" value="1" />
             <flag name="bottom" value="2" />
