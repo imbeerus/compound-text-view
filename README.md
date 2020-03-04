@@ -29,7 +29,7 @@ allprojects {
 ```
 ```
 dependencies {
-        implementation 'com.github.lndmflngs:compound-text-view:1.1.1'
+        implementation 'com.github.lndmflngs:compound-text-view:1.1.2'
 }
 ```
 
@@ -70,7 +70,6 @@ Attributes | Type | Default | Description
 **drawableAttachedToText** | boolean | AttachedToText.NO | Drawables will be attached to the beginning/end of the view or to the beginning/end of the text.
 **useCustomTransformation** | boolean | false | Use default or custom transformations for drawables before drawable will be wrapped.
 **handleClickWithinDrawableBounds** | boolean | false | Handle clicks on "gravity" space or on drawable itself.
-**includeFontMetricsPadding** | boolean | false | Is add font padding's for drawableStart and drawableEnd.
 
 *contains individual attr for each position (eg: drawableStartTint, drawableTopTint and etc.)
 

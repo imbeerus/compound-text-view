@@ -47,8 +47,6 @@ class GravityDrawable(
     val gravity: Int,
     private val innerHeight: Int,
     private val innerWidth: Int,
-    private val topFontPadding: Int,
-    private val bottomFontPadding: Int,
     private val isRtl: Boolean
 ) : DrawableWrapper(source) {
 
@@ -219,7 +217,7 @@ class GravityDrawable(
         val bottom: Int
         when (verticalGravity) {
             Gravity.BOTTOM -> {
-                bottom = this.bottom - bottomFontPadding
+                bottom = this.bottom
                 top = bottom - height
             }
             Gravity.CENTER_VERTICAL, Gravity.CENTER -> {
@@ -228,7 +226,7 @@ class GravityDrawable(
             }
             // Gravity.TOP = DEF
             else -> {
-                top = this.top + topFontPadding
+                top = this.top
                 bottom = top + height
             }
         }
