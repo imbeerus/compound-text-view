@@ -1,10 +1,12 @@
 package com.lockwood.compoundemo.fragment
 
 import android.annotation.SuppressLint
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -94,7 +96,7 @@ class RecyclerFragment : Fragment(R.layout.fragment_recycler) {
 
         private fun CompoundTextView.loadImage(url: String, type: Int) {
             val placeholder = context.drawable(R.drawable.ic_placeholder)!!
-            val size = drawableCustomSize
+            val size = drawableCustomSize.toDp(resources).toInt()
             when (type) {
                 TYPE_GLIDE -> {
                     GlideApp.with(context)
@@ -124,6 +126,9 @@ class RecyclerFragment : Fragment(R.layout.fragment_recycler) {
             }
 
         }
+
+        private fun Int.toDp(res: Resources) =
+            this / (res.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
 
         companion object {
 
