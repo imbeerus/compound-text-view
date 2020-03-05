@@ -34,7 +34,7 @@ class GravityTransformation(
         val intrinsicWidth = source.intrinsicWidth + padding
         var intrinsicHeight = source.intrinsicHeight + padding
 
-        if (isHorizontalPosition && intrinsicHeight < measuredHeight) {
+        if (isHorizontalPosition && measuredHeight < intrinsicHeight) {
             intrinsicHeight = measuredHeight
         }
 

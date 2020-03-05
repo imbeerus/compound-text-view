@@ -1,5 +1,0 @@
-$dokka.format:gfm
-$dokka.linkExtension:md
-
-com.lockwood.compound
-com.lockwood.compound.transofrmation
