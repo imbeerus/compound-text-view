@@ -112,7 +112,7 @@ class GravityDrawable(
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).also {
         it.setARGB(0, 0, 0, 0)
 //      used to see gravity background (blank space)
-      it.setARGB(255 / 6, 255, 0, 0)
+//      it.setARGB(255 / 6, 255, 0, 0)
     }
 
     /**

@@ -808,19 +808,6 @@ open class CompoundTextView @JvmOverloads constructor(
         }
 
     /**
-     * Build [TextPaint] for text and font related measurement
-     *
-     * @param size of text in Px
-     * @param font is [Typeface] of text
-     * @return TextPaint with applied or default args
-     */
-    protected fun buildTextPaint(size: Float, font: Typeface?): TextPaint = paint.apply {
-        isAntiAlias = true
-        textSize = size
-        typeface = font
-    }
-
-    /**
      * Update compound drawables and set them with [setCompoundDrawablesRelativeWithIntrinsicBounds]
      *
      * Apply custom transformation's to drawables (if allow to), apply [GravityTransformation] and

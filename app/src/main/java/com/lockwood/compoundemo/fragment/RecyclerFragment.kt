@@ -127,9 +127,6 @@ class RecyclerFragment : Fragment(R.layout.fragment_recycler) {
 
         }
 
-        private fun Int.toDp(res: Resources) =
-            this / (res.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
-
         companion object {
 
             private const val TYPE_GLIDE = 0
