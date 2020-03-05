@@ -25,10 +25,6 @@ class ShowcaseFragment : Fragment(R.layout.fragment_showcase), AdapterView.OnIte
 
     private var toast: Toast? = null
 
-    private val drawablesPositions = arrayOf(R.id.start, R.id.top, R.id.end, R.id.bottom)
-    private val checkBoxesByPosition
-        get() = drawablesPositions.map { root.findViewById<AppCompatCheckBox>(it) }
-
     private val compoundViewTouchListener = object : CompoundViewClickListener {
 
         override fun onViewClick(view: View, event: MotionEvent) =
@@ -48,23 +44,6 @@ class ShowcaseFragment : Fragment(R.layout.fragment_showcase), AdapterView.OnIte
 
     }
 
-    private val positionCheckedListener = CompoundButton.OnCheckedChangeListener { _, _ ->
-        val drawables = checkBoxesByPosition.mapIndexed { _, view ->
-            if (!view.isChecked) {
-                null
-            } else {
-                ctx.drawable(R.drawable.cat)
-            }
-        }
-
-        compound.setDrawables(
-            drawables[0],
-            drawables[1],
-            drawables[2],
-            drawables[3]
-        )
-    }
-
     private val attributesSpinners = arrayOf(R.id.gravity, R.id.padding, R.id.attachedToText)
     private val attributesViews
         get() = attributesSpinners.map { root.findViewById<AppCompatSpinner>(it) }
@@ -74,7 +53,6 @@ class ShowcaseFragment : Fragment(R.layout.fragment_showcase), AdapterView.OnIte
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         root = view
-        checkBoxesByPosition.forEach { it.setOnCheckedChangeListener(positionCheckedListener) }
         attributesViews.forEachIndexed { i, spinner ->
             spinner.setSimpleAdapter(attributesItems[i])
             spinner.onItemSelectedListener = this@ShowcaseFragment
