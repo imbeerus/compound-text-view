@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.util.DisplayMetrics
 import androidx.annotation.Px
 import androidx.core.graphics.drawable.toBitmap
 
@@ -17,13 +18,9 @@ class SizeTransformation(
 ) : DrawableTransformation {
 
     override fun performTransformation(source: Drawable, context: Context): Drawable {
-        val isValidSize =
-            size > 0 && (source.intrinsicHeight != size || source.intrinsicWidth != size)
-        return if (isValidSize) {
-            source.mutate().scale(context.resources, size, size)
-        } else {
-            source
-        }
+        val res = context.resources
+        val size = size.toDp(res).toInt()
+        return source.scale(res, size, size)
     }
 
     private fun Drawable.scale(
@@ -31,5 +28,14 @@ class SizeTransformation(
         width: Int,
         height: Int
     ) = BitmapDrawable(res, toBitmap(width, height))
+
+    /**
+     * This method converts device specific pixels to density independent pixels.
+     *
+     * @param res to get device specific display metrics
+     * @return value to represent dp equivalent to px value
+     */
+    private fun Int.toDp(res: Resources) =
+        this / (res.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
 
 }

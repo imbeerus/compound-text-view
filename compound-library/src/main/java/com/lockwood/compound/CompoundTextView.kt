@@ -30,6 +30,7 @@ import android.view.MotionEvent
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.getResourceIdOrThrow
+import androidx.core.graphics.drawable.updateBounds
 import androidx.core.widget.addTextChangedListener
 import com.lockwood.compound.Position.BOTTOM
 import com.lockwood.compound.Position.END
@@ -1221,16 +1222,6 @@ open class CompoundTextView @JvmOverloads constructor(
         }
 
     }
-
-    /**
-     * Update a bounding rectangle for the [Drawable]
-     */
-    private fun Drawable.updateBounds(
-            left: Int = bounds.left,
-            top: Int = bounds.top,
-            right: Int = bounds.right,
-            bottom: Int = bounds.bottom
-    ) = setBounds(left, top, right, bottom)
 
     companion object {
 
