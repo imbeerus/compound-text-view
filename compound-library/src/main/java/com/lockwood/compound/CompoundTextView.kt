@@ -532,6 +532,15 @@ open class CompoundTextView @JvmOverloads constructor(
         get() = this?.intrinsicWidth ?: 0
 
     /**
+     * Current drawable height or zero if null
+     */
+    private val Drawable?.height: Int
+        /**
+         * Current drawable width
+         */
+        get() = this?.intrinsicHeight ?: 0
+
+    /**
      * Is device in right to left configuration
      */
     private val Context.isRtl
@@ -673,13 +682,33 @@ open class CompoundTextView @JvmOverloads constructor(
         updateCompoundDrawables()
     }
 
-    /**
-     * This is called during layout when the size of this view has changed.
-     *
-     * And depending on the [drawableAttachedToText] drawables will be attached to the beginning/end
-     * of the view or text
-     */
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        updateStartAndEndDrawables(h)
+        updateTopAndBottomDrawables(w)
+    }
+
+    /**
+     * Drawables at START and END will be fit to text height
+     */
+    private fun updateStartAndEndDrawables(h: Int) {
+        val topHeight = drawables[TOP].height
+        val bottomHeight = drawables[BOTTOM].height
+        val resultSize = h - topHeight - bottomHeight
+        drawables.updateDrawableAtPositions(START, END) {
+            val offset = (resultSize - height) shr 1
+            val topOffset = bounds.top - offset
+            val bottomOffset = bounds.bottom + offset
+            if (offset > 0) {
+                updateBounds(top = topOffset, bottom = bottomOffset)
+            }
+        }
+    }
+
+    /**
+     * Drawables at TOP and BOTTOM will be attached to the beginning/end
+     * of the view or text depending on the [drawableAttachedToText]
+     */
+    private fun updateTopAndBottomDrawables(w: Int) {
         val halfWidth = w shr 1
         val startWidth: Int
         val endWidth: Int
@@ -697,7 +726,7 @@ open class CompoundTextView @JvmOverloads constructor(
             drawableAttachedToText == AttachedToText.BOTTOM || drawableAttachedToText == AttachedToText.ALL
 
         // calculate offsets to fit in view for TOP and BOTTOM drawables, if exist
-        updateDrawables(TOP, BOTTOM) { position ->
+        drawables.updateDrawableAtPositions(TOP, BOTTOM) { position ->
             val halfDrawableWidth = width shr 1
 
             val offset = halfDrawableWidth.minus(startWidth shr 1).plus(endWidth shr 1)
@@ -713,6 +742,7 @@ open class CompoundTextView @JvmOverloads constructor(
             updateBounds(left = startDrawableOffset, right = endDrawableOffset)
         }
     }
+
 
     /**
      * Sets the Drawables (if any) to appear to the start of, above, to the end
@@ -1218,12 +1248,12 @@ open class CompoundTextView @JvmOverloads constructor(
 
     }
 
-    private inline fun updateDrawables(
+    private inline fun Array<Drawable?>.updateDrawableAtPositions(
         vararg positions: Int,
         update: Drawable.(Int) -> Unit = {}
-    ) = drawables.forEachIndexed { position, drawable ->
+    ) = forEachIndexed { position, drawable ->
         if (drawable != null && positions.contains(position)) {
-            drawables[position]!!.update(position)
+            get(position)!!.update(position)
         }
     }
 

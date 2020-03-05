@@ -10,7 +10,6 @@
     android:paddingEnd="8dp"
     android:paddingRight="8dp"
     app:drawablePadding="8dp"
-    app:drawableSize="64dp"
     app:useCustomTransformation="false"
     tools:drawableSize="64dp"
     tools:drawableStart="@drawable/ic_placeholder"

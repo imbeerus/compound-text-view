@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas a laoreet augue, ut lobortis tortor. Praesent nunc leo, imperdiet vel consequat at, consectetur nec nunc. "
-        app:drawableSize="32dp"
+        app:drawableSize="42dp"
         app:drawableStart="@drawable/cat"
         app:handleClickWithinDrawableBounds="true"
         tools:drawableStart="@drawable/ic_placeholder" />

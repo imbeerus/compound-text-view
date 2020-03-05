@@ -8,8 +8,6 @@
         <item>Bottom</item>
         <item>End</item>
         <item>Center</item>
-        <item>Center_horizontal</item>
-        <item>Center_vertical</item>
     </string-array>
 
     <string-array name="attached_to_text">

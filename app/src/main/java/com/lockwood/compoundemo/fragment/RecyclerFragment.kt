@@ -96,7 +96,7 @@ class RecyclerFragment : Fragment(R.layout.fragment_recycler) {
 
         private fun CompoundTextView.loadImage(url: String, type: Int) {
             val placeholder = context.drawable(R.drawable.ic_placeholder)!!
-            val size = drawableCustomSize.toDp(resources).toInt()
+            val size = drawableCustomSize
             when (type) {
                 TYPE_GLIDE -> {
                     GlideApp.with(context)
