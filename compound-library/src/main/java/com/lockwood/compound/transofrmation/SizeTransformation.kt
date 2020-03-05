@@ -20,7 +20,11 @@ class SizeTransformation(
     override fun performTransformation(source: Drawable, context: Context): Drawable {
         val res = context.resources
         val size = size.toDp(res).toInt()
-        return source.scale(res, size, size)
+        return if (size > 0) {
+            source.scale(res, size, size)
+        } else {
+            source
+        }
     }
 
     private fun Drawable.scale(
