@@ -22,6 +22,7 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.Gravity
 import androidx.appcompat.graphics.drawable.DrawableWrapper
 import androidx.core.graphics.toRectF
@@ -34,39 +35,37 @@ import kotlin.math.abs
  * before wrapping, otherwise internal {@link Callback} may be dropped.
  *
  * @param source drawable that be wrapped
+ * @param padding of drawable
  * @param gravity of [source] drawable
- * @param innerHeight is the height at which the drawable would like to be laid out
- * @param innerWidth is the width at which the drawable would like to be laid out
  * @param isRtl configuration or not
  */
 @SuppressLint("RestrictedApi")
 class GravityDrawable(
     val source: Drawable,
+    val padding: Int,
     val gravity: Int,
-    private val innerHeight: Int,
-    private val innerWidth: Int,
     private val isRtl: Boolean
 ) : DrawableWrapper(source) {
 
     /**
-     * Width of drawable
+     * Width of source drawable
      */
-    private val width: Int = source.intrinsicWidth
+    private val sourceWidth: Int = source.intrinsicWidth
 
     /**
-     * Height of drawable
+     * Height of source drawable
      */
-    private val height: Int = source.intrinsicHeight
+    private val sourceHeight: Int = source.intrinsicHeight
 
     /**
      * Half of drawable width
      */
-    private val halfWidth = width shr 1
+    private val halfWidth = intrinsicWidth shr 1
 
     /**
      * Half of drawable height
      */
-    private val halfHeight = height shr 1
+    private val halfHeight = intrinsicHeight shr 1
 
     /**
      * Positions in x-axis for [source]
@@ -112,7 +111,7 @@ class GravityDrawable(
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).also {
         it.setARGB(0, 0, 0, 0)
 //      used to see gravity background (blank space)
-//      it.setARGB(255 / 6, 255, 0, 0)
+        it.setARGB(255 / 6, 255, 0, 0)
     }
 
     /**
@@ -120,9 +119,9 @@ class GravityDrawable(
      */
     private val paddingPath = Path()
 
-    override fun getIntrinsicWidth() = innerWidth
+    override fun getIntrinsicWidth() = sourceWidth + padding
 
-    override fun getIntrinsicHeight() = innerHeight
+    override fun getIntrinsicHeight() = sourceHeight + padding
 
     override fun draw(canvas: Canvas) = with(canvas) {
         // draw blank space
@@ -131,36 +130,37 @@ class GravityDrawable(
         source.draw(this)
     }
 
-    override fun onBoundsChange(paddingBounds: Rect) = with(paddingBounds) {
+    @ExperimentalStdlibApi
+    override fun onBoundsChange(paddingBounds: Rect) {
         // change result path drawable
         paddingPath.run {
             reset()
-            paddingPath.addRect(toRectF(), Path.Direction.CW)
+            paddingPath.addRect(paddingBounds.toRectF(), Path.Direction.CW)
         }
         // refresh bounds for source
-        source.bounds = fetchDrawableBounds()
+        source.bounds = fetchDrawableBounds(paddingBounds)
     }
 
     /**
      * Fetch bounds for [source] based on [gravity]
      */
-    private fun Rect.fetchDrawableBounds(): Rect {
+    private fun fetchDrawableBounds(paddingBounds: Rect): Rect {
         val isOneAttrGravity = gravityToUse.contains(gravity)
         return if (isOneAttrGravity) {
             // handle simple gravity like "start" or "center"
-            fetchSimpleGravityBounds()
+            fetchSimpleGravityBounds(paddingBounds)
         } else {
             // handle complex gravity like "start|bottom" or "center|bottom"
-            fetchComplexGravityBounds()
+            fetchComplexGravityBounds(paddingBounds)
         }
     }
 
     /**
      * Fetch bounds for [source] based on [gravity] with simple attr like "start"
      */
-    private fun Rect.fetchSimpleGravityBounds(): Rect {
-        val hPosition = fetchHorizontalPositions(gravity)
-        val vPosition = fetchVerticalPositions(gravity)
+    private fun fetchSimpleGravityBounds(paddingBounds: Rect): Rect {
+        val hPosition = fetchHorizontalPositions(paddingBounds, gravity)
+        val vPosition = fetchVerticalPositions(paddingBounds, gravity)
         val (left: Int, right: Int) = hPosition.run { get(0) to get(1) }
         val (top: Int, bottom: Int) = vPosition.run { get(0) to get(1) }
         return Rect(left, top, right, bottom)
@@ -169,7 +169,7 @@ class GravityDrawable(
     /**
      * Fetch bounds for [source] based on [gravity] with complex attr like "start|bottom"
      */
-    private fun Rect.fetchComplexGravityBounds(): Rect {
+    private fun fetchComplexGravityBounds(paddingBounds: Rect): Rect {
         val gravityToSet = arrayOf<MutableSet<Int>>(mutableSetOf(), mutableSetOf())
         horizontalPositions.forEach { h ->
             verticalPositions.forEach { v ->
@@ -183,10 +183,10 @@ class GravityDrawable(
                 }
             }
         }
-        val hPosition = mutableListOf(0, 0)
-        val vPosition = mutableListOf(0, 0)
-        val hPositions = gravityToSet[0].map { fetchHorizontalPositions(it) }
-        val vPositions = gravityToSet[1].map { fetchVerticalPositions(it) }
+        val hPosition = mutableListOf(paddingBounds.left, paddingBounds.right)
+        val vPosition = mutableListOf(paddingBounds.top, paddingBounds.bottom)
+        val hPositions = gravityToSet[0].map { fetchHorizontalPositions(paddingBounds, it) }
+        val vPositions = gravityToSet[1].map { fetchVerticalPositions(paddingBounds, it) }
         hPositions.forEach {
             hPosition[0] = hPosition[0].plus(it[0])
             hPosition[1] = hPosition[1].plus(it[1])
@@ -197,10 +197,10 @@ class GravityDrawable(
         }
         // if nothing is found use default size
         if (hPosition[1] == 0) {
-            hPosition[1] = width
+            hPosition[1] = sourceWidth
         }
         if (vPosition[1] == 0) {
-            vPosition[1] = height
+            vPosition[1] = sourceHeight
         }
         val (left: Int, right: Int) = hPosition.run { get(0) to get(1) }
         val (top: Int, bottom: Int) = vPosition.run { get(0) to get(1) }
@@ -210,22 +210,22 @@ class GravityDrawable(
     /**
      * Fetch position of [source] based on [verticalPositions] and [otherPositions]
      */
-    private fun Rect.fetchVerticalPositions(verticalGravity: Int): IntArray {
+    private fun fetchVerticalPositions(paddingBounds: Rect, verticalGravity: Int): IntArray {
         val top: Int
         val bottom: Int
         when (verticalGravity) {
             Gravity.BOTTOM -> {
-                bottom = this.bottom
-                top = bottom - height
+                bottom = paddingBounds.bottom
+                top = bottom - sourceHeight
             }
             Gravity.CENTER_VERTICAL, Gravity.CENTER -> {
-                top = centerY() - halfHeight
-                bottom = top + height
+                top = paddingBounds.centerY() - halfHeight
+                bottom = top + sourceHeight
             }
             // Gravity.TOP = DEF
             else -> {
-                top = this.top
-                bottom = top + height
+                top = paddingBounds.top
+                bottom = top + sourceHeight
             }
         }
         return intArrayOf(top, bottom)
@@ -234,7 +234,7 @@ class GravityDrawable(
     /**
      * Fetch position of [source] based on [horizontalPositions] and [otherPositions]
      */
-    private fun Rect.fetchHorizontalPositions(gravity: Int): IntArray {
+    private fun fetchHorizontalPositions(paddingBounds: Rect, gravity: Int): IntArray {
         val left: Int
         val right: Int
         val horizontalGravity = if (!isRtl) {
@@ -248,17 +248,17 @@ class GravityDrawable(
         }
         when (horizontalGravity) {
             Gravity.END -> {
-                right = this.right
-                left = right - width
+                right = paddingBounds.right
+                left = right - sourceWidth
             }
             Gravity.CENTER_HORIZONTAL, Gravity.CENTER -> {
-                left = centerX() - halfWidth
-                right = left + width
+                left = paddingBounds.centerX() - halfWidth
+                right = left + sourceWidth
             }
             // Gravity.START = DEF
             else -> {
-                left = this.left
-                right = left + width
+                left = paddingBounds.left
+                right = left + sourceWidth
             }
         }
         return intArrayOf(left, right)

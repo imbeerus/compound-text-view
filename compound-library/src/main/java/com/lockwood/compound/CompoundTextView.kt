@@ -20,11 +20,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.Rect
-import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.text.TextPaint
 import android.util.AttributeSet
+import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
 import androidx.appcompat.content.res.AppCompatResources
@@ -39,7 +38,6 @@ import com.lockwood.compound.Position.TOP
 import com.lockwood.compound.transofrmation.GravityTransformation
 import com.lockwood.compound.transofrmation.SizeTransformation
 import com.lockwood.compound.transofrmation.TintTransformation
-import kotlin.math.abs
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -546,20 +544,6 @@ open class CompoundTextView @JvmOverloads constructor(
     private val Context.isRtl
         get() = resources.getBoolean(R.bool.is_right_to_left)
 
-    /**
-     * Start offset to fit in view for [topDrawable] and [bottomDrawable]
-     *
-     * @see onSizeChanged
-     */
-    private var startDrawableOffset: Int = 0
-
-    /**
-     * End offset to fit in view for [topDrawable] and [bottomDrawable]
-     *
-     * @see onSizeChanged
-     */
-    private var endDrawableOffset: Int = 0
-
     // fetch attrs and update compound drawables
     init {
         context.theme.obtainStyledAttributes(
@@ -682,67 +666,52 @@ open class CompoundTextView @JvmOverloads constructor(
         updateCompoundDrawables()
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        updateStartAndEndDrawables(h)
-        updateTopAndBottomDrawables(w)
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        fitDrawablesToViewBounds(measuredWidth, measuredHeight)
     }
 
-    /**
-     * Drawables at START and END will be fit to text height
-     */
-    private fun updateStartAndEndDrawables(h: Int) {
-        val topHeight = drawables[TOP].height
-        val bottomHeight = drawables[BOTTOM].height
-        val resultSize = h - topHeight - bottomHeight
-        drawables.updateDrawableAtPositions(START, END) {
-            val offset = (resultSize - height) shr 1
-            val topOffset = bounds.top - offset
-            val bottomOffset = bounds.bottom + offset
-            if (offset > 0) {
-                updateBounds(top = topOffset, bottom = bottomOffset)
-            }
-        }
-    }
+    private fun fitDrawablesToViewBounds(w: Int, h: Int) {
+        val verticalOffset = drawables
+            .filterIndexed { i, _ -> i == TOP || i == BOTTOM }
+            .sumBy { it.height } shr 1
+        val horizontalOffset = drawables
+            .filterIndexed { i, _ -> i == START || i == END }
+            .sumBy { it.width } shr 1
 
-    /**
-     * Drawables at TOP and BOTTOM will be attached to the beginning/end
-     * of the view or text depending on the [drawableAttachedToText]
-     */
-    private fun updateTopAndBottomDrawables(w: Int) {
-        val halfWidth = w shr 1
-        val startWidth: Int
-        val endWidth: Int
-        if (!context.isRtl) {
-            startWidth = drawables[START].width
-            endWidth = drawables[END].width
-        } else {
-            startWidth = drawables[END].width
-            endWidth = drawables[START].width
-        }
-
-        val isTopClip =
+        val isTopAttachedToText =
             drawableAttachedToText == AttachedToText.TOP || drawableAttachedToText == AttachedToText.ALL
-        val isBottomClip =
+        val isBottomAttachedToText =
             drawableAttachedToText == AttachedToText.BOTTOM || drawableAttachedToText == AttachedToText.ALL
 
-        // calculate offsets to fit in view for TOP and BOTTOM drawables, if exist
-        drawables.updateDrawableAtPositions(TOP, BOTTOM) { position ->
-            val halfDrawableWidth = width shr 1
+        updateDrawables { position ->
+            if (position == START || position == END) {
+                val halfHeight = h shr 1
+                val halfDrawableHeight = height shr 1
 
-            val offset = halfDrawableWidth.minus(startWidth shr 1).plus(endWidth shr 1)
-            val paddingOffset = (textStartPadding shr 1).plus(textEndPadding shr 1)
-            startDrawableOffset = -halfWidth.minus(offset).minus(paddingOffset)
-            endDrawableOffset = halfWidth.plus(offset).minus(paddingOffset)
-
-            if ((position == TOP && isTopClip) || (position == BOTTOM && isBottomClip)) {
-                startDrawableOffset += startWidth
-                endDrawableOffset -= endWidth
+                val top = -halfHeight + halfDrawableHeight + verticalOffset
+                val bottom = halfHeight + halfDrawableHeight - verticalOffset
+                updateBounds(top = top, bottom = bottom)
             }
+            if (position == TOP || position == BOTTOM) {
+                val halfWidth = w shr 1
+                val halfDrawableWidth = width shr 1
 
-            updateBounds(left = startDrawableOffset, right = endDrawableOffset)
+                val isAttachedTop = position == TOP && isTopAttachedToText
+                val isAttachedBottom = position == BOTTOM && isBottomAttachedToText
+
+                val attachedOffset = if (!isAttachedTop || !isAttachedBottom) {
+                    width
+                } else {
+                    0
+                }
+
+                val left = -halfWidth + halfDrawableWidth + horizontalOffset - attachedOffset
+                val right = halfWidth + halfDrawableWidth - horizontalOffset + attachedOffset
+                updateBounds(left = left, right = right)
+            }
         }
     }
-
 
     /**
      * Sets the Drawables (if any) to appear to the start of, above, to the end
@@ -854,8 +823,6 @@ open class CompoundTextView @JvmOverloads constructor(
             changedDrawables[END],
             changedDrawables[BOTTOM]
         )
-        // to be sure that TOP and BOTTOM drawable fit in view
-        onSizeChanged(width, height, 0, 0)
     }
 
     /**
@@ -923,6 +890,7 @@ open class CompoundTextView @JvmOverloads constructor(
      * @param y coordinate of click
      * @return true if click intersect or false if not
      */
+
     private fun isClickIntersectWithGravityDrawableBounds(
         position: Int,
         drawable: GravityDrawable,
@@ -940,6 +908,7 @@ open class CompoundTextView @JvmOverloads constructor(
      * @param drawable to fetch
      * @return bounds of compound drawable
      */
+
     private fun fetchCompoundDrawableBounds(
         position: Int,
         drawable: GravityDrawable
@@ -1008,6 +977,7 @@ open class CompoundTextView @JvmOverloads constructor(
      * @param drawable wrapper, that contains source drawable to fetch
      * @return bounds of drawable from [GravityDrawable] wrapper
      */
+
     private fun fetchCompoundDrawableSourceBounds(
         position: Int,
         drawable: GravityDrawable
@@ -1016,9 +986,9 @@ open class CompoundTextView @JvmOverloads constructor(
         val bounds = drawable.source.bounds
         return compoundDrawableBounds.apply {
             left += bounds.left
-            if (position == TOP || position == BOTTOM) {
-                left += abs(startDrawableOffset)
-            }
+//            if (position == TOP || position == BOTTOM) {
+//                left += abs(startDrawableOffset)
+//            }
             right = left + bounds.width()
             top += bounds.top
             bottom = top + bounds.height()
@@ -1235,12 +1205,11 @@ open class CompoundTextView @JvmOverloads constructor(
 
     }
 
-    private inline fun Array<Drawable?>.updateDrawableAtPositions(
-        vararg positions: Int,
+    private inline fun updateDrawables(
         update: Drawable.(Int) -> Unit = {}
-    ) = forEachIndexed { position, drawable ->
-        if (drawable != null && positions.contains(position)) {
-            get(position)!!.update(position)
+    ) = drawables.forEachIndexed { position, drawable ->
+        if (drawable != null) {
+            drawables[position]!!.update(position)
         }
     }
 

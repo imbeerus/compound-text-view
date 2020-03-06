@@ -25,9 +25,8 @@ class GravityTransformation(
     override fun performTransformation(source: Drawable, context: Context) =
         GravityDrawable(
             source = source,
+            padding = padding,
             gravity = gravity,
-            innerHeight = source.intrinsicWidth + padding,
-            innerWidth = source.intrinsicHeight + padding,
             isRtl = context.isRtl
         )
 
