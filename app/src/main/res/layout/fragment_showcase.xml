@@ -13,18 +13,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas a laoreet augue, ut lobortis tortor. Praesent nunc leo, imperdiet vel consequat at, consectetur nec nunc. "
-        app:drawableBottom="@drawable/cat"
-        app:drawableEnd="@drawable/cat"
-        app:drawableSize="42dp"
-        app:drawableStart="@drawable/cat"
-        app:drawableTop="@drawable/cat"
-        app:handleClickWithinDrawableBounds="true"
-        tools:drawableBottom="@drawable/ic_placeholder"
-        tools:drawableEnd="@drawable/ic_placeholder"
-        tools:drawableGravity="center"
-        tools:drawablePadding="32dp"
-        tools:drawableStart="@drawable/ic_placeholder"
-        tools:drawableTop="@drawable/ic_placeholder" />
+        app:drawableSize="24dp"
+        app:drawableStart="@drawable/ic_arrow_forward"
+        app:drawableTint="@color/accent"
+        app:handleClickWithinDrawableBounds="true" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -35,21 +27,41 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Drawable gravity" />
+            android:text="Drawable" />
 
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/gravity"
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/start"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Start" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Top" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/end"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="End" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bottom" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Attached to text" />
+            android:text="Drawable gravity" />
 
         <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/attachedToText"
+            android:id="@+id/gravity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

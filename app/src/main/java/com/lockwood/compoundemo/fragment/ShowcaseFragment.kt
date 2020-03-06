@@ -14,6 +14,7 @@ import androidx.appcompat.widget.AppCompatSpinner
 import androidx.fragment.app.Fragment
 import com.lockwood.compound.AttachedToText
 import com.lockwood.compound.CompoundViewClickListener
+import com.lockwood.compound.Position
 import com.lockwood.compoundemo.R
 import com.lockwood.compoundemo.ctx
 import com.lockwood.compoundemo.drawable
@@ -24,6 +25,10 @@ class ShowcaseFragment : Fragment(R.layout.fragment_showcase), AdapterView.OnIte
     private lateinit var root: View
 
     private var toast: Toast? = null
+
+    private val drawablesPositions = arrayOf(R.id.start, R.id.top, R.id.end, R.id.bottom)
+    private val checkBoxesByPosition
+        get() = drawablesPositions.map { root.findViewById<AppCompatCheckBox>(it) }
 
     private val compoundViewTouchListener = object : CompoundViewClickListener {
 
@@ -44,15 +49,38 @@ class ShowcaseFragment : Fragment(R.layout.fragment_showcase), AdapterView.OnIte
 
     }
 
-    private val attributesSpinners = arrayOf(R.id.gravity, R.id.padding, R.id.attachedToText)
+    private val positionCheckedListener = CompoundButton.OnCheckedChangeListener { _, _ ->
+        val drawables = checkBoxesByPosition.mapIndexed { i, view ->
+            if (!view.isChecked) {
+                null
+            } else {
+                val res = when (i) {
+                    Position.END -> R.drawable.ic_arrow_back
+                    Position.TOP -> R.drawable.ic_arrow_downward
+                    Position.BOTTOM -> R.drawable.ic_arrow_upward
+                    else -> R.drawable.ic_arrow_forward
+                }
+                ctx.drawable(res)
+            }
+        }
+
+        compound.setDrawables(
+            drawables[0],
+            drawables[1],
+            drawables[2],
+            drawables[3]
+        )
+    }
+
+    private val attributesSpinners = arrayOf(R.id.gravity, R.id.padding)
     private val attributesViews
         get() = attributesSpinners.map { root.findViewById<AppCompatSpinner>(it) }
-    private val attributesItems =
-        arrayOf(R.array.gravity, R.array.padding, R.array.attached_to_text)
+    private val attributesItems = arrayOf(R.array.gravity, R.array.padding)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         root = view
+        checkBoxesByPosition.forEach { it.setOnCheckedChangeListener(positionCheckedListener) }
         attributesViews.forEachIndexed { i, spinner ->
             spinner.setSimpleAdapter(attributesItems[i])
             spinner.onItemSelectedListener = this@ShowcaseFragment
@@ -64,7 +92,6 @@ class ShowcaseFragment : Fragment(R.layout.fragment_showcase), AdapterView.OnIte
         when (parent.id) {
             R.id.gravity -> updateGravity(position)
             R.id.padding -> updatePadding(position, view)
-            R.id.attachedToText -> updateTextClip(position)
             else -> {
             }
         }
@@ -84,16 +111,6 @@ class ShowcaseFragment : Fragment(R.layout.fragment_showcase), AdapterView.OnIte
             else -> Gravity.NO_GRAVITY
         }
         compound.drawableGravity = gravity
-    }
-
-    private fun updateTextClip(position: Int) {
-        val textClip = when (position) {
-            1 -> AttachedToText.TOP
-            2 -> AttachedToText.BOTTOM
-            3 -> AttachedToText.ALL
-            else -> AttachedToText.NO
-        }
-        compound.drawableAttachedToText = textClip
     }
 
     private fun updatePadding(position: Int, view: View?) {

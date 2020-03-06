@@ -10,13 +10,6 @@
         <item>Center</item>
     </string-array>
 
-    <string-array name="attached_to_text">
-        <item>Default</item>
-        <item>Top</item>
-        <item>Bottom</item>
-        <item>All</item>
-    </string-array>
-
     <string-array name="padding">
         <item>Default</item>
         <item>4</item>

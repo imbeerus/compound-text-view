@@ -58,16 +58,6 @@ class GravityDrawable(
     private val sourceHeight: Int = source.intrinsicHeight
 
     /**
-     * Half of drawable width
-     */
-    private val halfWidth = intrinsicWidth shr 1
-
-    /**
-     * Half of drawable height
-     */
-    private val halfHeight = intrinsicHeight shr 1
-
-    /**
      * Positions in x-axis for [source]
      */
     private val horizontalPositions = intArrayOf(
@@ -219,7 +209,7 @@ class GravityDrawable(
                 top = bottom - sourceHeight
             }
             Gravity.CENTER_VERTICAL, Gravity.CENTER -> {
-                top = paddingBounds.centerY() - halfHeight
+                top = (intrinsicHeight shr 1) - (sourceHeight shr 1)
                 bottom = top + sourceHeight
             }
             // Gravity.TOP = DEF
@@ -252,7 +242,7 @@ class GravityDrawable(
                 left = right - sourceWidth
             }
             Gravity.CENTER_HORIZONTAL, Gravity.CENTER -> {
-                left = paddingBounds.centerX() - halfWidth
+                left = (intrinsicWidth shr 1) - (sourceWidth shr 1)
                 right = left + sourceWidth
             }
             // Gravity.START = DEF

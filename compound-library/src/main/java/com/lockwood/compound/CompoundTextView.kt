@@ -38,6 +38,7 @@ import com.lockwood.compound.Position.TOP
 import com.lockwood.compound.transofrmation.GravityTransformation
 import com.lockwood.compound.transofrmation.SizeTransformation
 import com.lockwood.compound.transofrmation.TintTransformation
+import kotlin.math.abs
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -81,26 +82,6 @@ open class CompoundTextView @JvmOverloads constructor(
      * Array of [Int] size in Px size which will be used in [SizeTransformation]
      */
     protected val drawablesSize = Array(DEF_DRAWABLES_SIZE) { DEF_SIZE }
-
-    /**
-     * Determines whether the drawables will be attached to the beginning/end of the view
-     * or will be attached to the beginning/end of the text
-     *
-     * @attr [R.styleable.CompoundTextView_drawableAttachedToText]
-     * @see AttachedToText
-     */
-    var drawableAttachedToText by updateDrawablesProperty { DEF_ATTACHED_TO_TEXT }
-        /**
-         * Is drawables will be attached to the beginning/end of the view or text
-         */
-        get
-        /**
-         * Is drawables will be attached to the beginning/end of the view or text,
-         * then [updateCompoundDrawables]
-         *
-         * @see onSizeChanged
-         */
-        set
 
     /**
      * [Drawable] to appear to the start of the view
@@ -637,11 +618,6 @@ open class CompoundTextView @JvmOverloads constructor(
                     drawableTint
                 )
 
-                drawableAttachedToText = getInt(
-                    R.styleable.CompoundTextView_drawableAttachedToText,
-                    DEF_ATTACHED_TO_TEXT
-                )
-
                 useCustomTransformation = getBoolean(
                     R.styleable.CompoundTextView_useCustomTransformation,
                     DEF_USE_CUSTOM_TRANSFORMATION
@@ -679,11 +655,6 @@ open class CompoundTextView @JvmOverloads constructor(
             .filterIndexed { i, _ -> i == START || i == END }
             .sumBy { it.width } shr 1
 
-        val isTopAttachedToText =
-            drawableAttachedToText == AttachedToText.TOP || drawableAttachedToText == AttachedToText.ALL
-        val isBottomAttachedToText =
-            drawableAttachedToText == AttachedToText.BOTTOM || drawableAttachedToText == AttachedToText.ALL
-
         updateDrawables { position ->
             if (position == START || position == END) {
                 val halfHeight = h shr 1
@@ -697,17 +668,9 @@ open class CompoundTextView @JvmOverloads constructor(
                 val halfWidth = w shr 1
                 val halfDrawableWidth = width shr 1
 
-                val isAttachedTop = position == TOP && isTopAttachedToText
-                val isAttachedBottom = position == BOTTOM && isBottomAttachedToText
+                val left = -halfWidth + halfDrawableWidth + horizontalOffset
+                val right = halfWidth + halfDrawableWidth - horizontalOffset
 
-                val attachedOffset = if (!isAttachedTop || !isAttachedBottom) {
-                    width
-                } else {
-                    0
-                }
-
-                val left = -halfWidth + halfDrawableWidth + horizontalOffset - attachedOffset
-                val right = halfWidth + halfDrawableWidth - horizontalOffset + attachedOffset
                 updateBounds(left = left, right = right)
             }
         }
@@ -798,8 +761,8 @@ open class CompoundTextView @JvmOverloads constructor(
                     val size = drawablesSize[position]
                     val tint = drawablesTint[position]
 
-                    val resized = SizeTransformation(size).performTransformation(source, context)
-                    TintTransformation(tint).performTransformation(resized, context)
+                    val tinted = TintTransformation(tint).performTransformation(source, context)
+                    SizeTransformation(size).performTransformation(tinted, context)
                 } else {
                     source
                 }
@@ -808,10 +771,7 @@ open class CompoundTextView @JvmOverloads constructor(
                 val padding = drawablesPadding[position]
                 val gravity = drawablesGravity[position]
 
-                GravityTransformation(
-                    gravity,
-                    padding
-                ).performTransformation(drawable, context)
+                GravityTransformation(gravity, padding).performTransformation(drawable, context)
             } else {
                 null
             }
@@ -898,6 +858,7 @@ open class CompoundTextView @JvmOverloads constructor(
         y: Int
     ): Boolean {
         val sourceDrawableBounds = fetchCompoundDrawableSourceBounds(position, drawable)
+        Log.d(TAG,"x:$x; y:$y")
         return sourceDrawableBounds.contains(x, y)
     }
 
@@ -935,17 +896,8 @@ open class CompoundTextView @JvmOverloads constructor(
                 Rect(0, topBounds, bounds.right, bottom)
             }
             TOP -> {
-                val startOffset: Int
-                val endOffset: Int
-                if (drawableAttachedToText == AttachedToText.TOP || drawableAttachedToText == AttachedToText.ALL) {
-                    startOffset = startBounds
-                    endOffset = endBounds
-                } else {
-                    startOffset = 0
-                    endOffset = 0
-                }
-                val right = width - endOffset
-                Rect(startOffset, bounds.top, right, bounds.bottom)
+                val right = width - endBounds
+                Rect(startBounds, bounds.top, right, bounds.bottom)
             }
             END -> {
                 val left = width - bounds.right
@@ -953,18 +905,9 @@ open class CompoundTextView @JvmOverloads constructor(
                 Rect(left, topBounds, width, bottom)
             }
             BOTTOM -> {
-                val startOffset: Int
-                val endOffset: Int
-                if (drawableAttachedToText == AttachedToText.BOTTOM || drawableAttachedToText == AttachedToText.ALL) {
-                    startOffset = startBounds
-                    endOffset = endBounds
-                } else {
-                    startOffset = 0
-                    endOffset = 0
-                }
-                val right = width - endOffset
+                val right = width - endBounds
                 val top = height - bounds.bottom
-                Rect(startOffset, top, right, height)
+                Rect(startBounds, top, right, height)
             }
             else -> Rect()
         }
@@ -983,15 +926,17 @@ open class CompoundTextView @JvmOverloads constructor(
         drawable: GravityDrawable
     ): Rect {
         val compoundDrawableBounds = fetchCompoundDrawableBounds(position, drawable)
-        val bounds = drawable.source.bounds
+        val bounds = drawable.source.copyBounds().apply {
+            right += abs(left)
+            bottom += abs(top)
+            left = 0
+            top = 0
+        }
         return compoundDrawableBounds.apply {
             left += bounds.left
-//            if (position == TOP || position == BOTTOM) {
-//                left += abs(startDrawableOffset)
-//            }
-            right = left + bounds.width()
-            top += bounds.top
-            bottom = top + bounds.height()
+            right = left + bounds.right
+            top  = bounds.top
+            bottom = top + bounds.bottom
         }
     }
 
@@ -1225,9 +1170,6 @@ open class CompoundTextView @JvmOverloads constructor(
 
         /** @suppress */
         const val DEF_GRAVITY = Gravity.NO_GRAVITY
-
-        /** @suppress */
-        const val DEF_ATTACHED_TO_TEXT = AttachedToText.NO
 
         /** @suppress */
         const val DEF_PADDING = 0
