@@ -29,7 +29,7 @@ allprojects {
 ```
 ```
 dependencies {
-        implementation 'com.github.lndmflngs:compound-text-view:1.1.3'
+        implementation 'com.github.lndmflngs:compound-text-view:1.2.0'
 }
 ```
 
