@@ -38,7 +38,6 @@ import com.lockwood.compound.Position.TOP
 import com.lockwood.compound.transofrmation.GravityTransformation
 import com.lockwood.compound.transofrmation.SizeTransformation
 import com.lockwood.compound.transofrmation.TintTransformation
-import kotlin.math.abs
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -838,6 +837,8 @@ open class CompoundTextView @JvmOverloads constructor(
         y: Int
     ): Boolean {
         val compoundDrawableBounds = fetchCompoundDrawableBounds(position, drawable)
+        Log.d(TAG, "x:$x; y:$y")
+        Log.d(TAG, "compoundDrawableBounds: $compoundDrawableBounds")
         return compoundDrawableBounds.contains(x, y)
     }
 
@@ -850,7 +851,6 @@ open class CompoundTextView @JvmOverloads constructor(
      * @param y coordinate of click
      * @return true if click intersect or false if not
      */
-
     private fun isClickIntersectWithGravityDrawableBounds(
         position: Int,
         drawable: GravityDrawable,
@@ -858,7 +858,8 @@ open class CompoundTextView @JvmOverloads constructor(
         y: Int
     ): Boolean {
         val sourceDrawableBounds = fetchCompoundDrawableSourceBounds(position, drawable)
-        Log.d(TAG,"x:$x; y:$y")
+        Log.d(TAG, "sourceDrawableBounds: $sourceDrawableBounds")
+        Log.d(TAG, "x:$x; y:$y")
         return sourceDrawableBounds.contains(x, y)
     }
 
@@ -869,15 +870,14 @@ open class CompoundTextView @JvmOverloads constructor(
      * @param drawable to fetch
      * @return bounds of compound drawable
      */
-
     private fun fetchCompoundDrawableBounds(
         position: Int,
         drawable: GravityDrawable
     ): Rect {
         val bounds = drawable.bounds
-        val startBounds = drawables[START]?.bounds?.right ?: 0
-        val endBounds = drawables[END]?.bounds?.right ?: 0
-        val topBounds = drawables[TOP]?.bounds?.bottom ?: 0
+        val startBounds = drawables[START]?.bounds?.width() ?: 0
+        val endBounds = drawables[END]?.bounds?.width() ?: 0
+        val topBounds = drawables[TOP]?.bounds?.height() ?: 0
 
         val isHorizontal = position == START || position == END
         val rtlPosition = if (context.isRtl && isHorizontal) {
@@ -892,21 +892,21 @@ open class CompoundTextView @JvmOverloads constructor(
 
         return when (rtlPosition) {
             START -> {
-                val bottom = bounds.bottom + topBounds
-                Rect(0, topBounds, bounds.right, bottom)
+                val bottom = bounds.height() + topBounds
+                Rect(0, topBounds, bounds.width(), bottom)
             }
             TOP -> {
                 val right = width - endBounds
-                Rect(startBounds, bounds.top, right, bounds.bottom)
+                Rect(startBounds, 0, right, bounds.bottom)
             }
             END -> {
-                val left = width - bounds.right
-                val bottom = bounds.bottom + topBounds
+                val left = width - bounds.width()
+                val bottom = bounds.height() + topBounds
                 Rect(left, topBounds, width, bottom)
             }
             BOTTOM -> {
                 val right = width - endBounds
-                val top = height - bounds.bottom
+                val top = height - bounds.height()
                 Rect(startBounds, top, right, height)
             }
             else -> Rect()
@@ -920,23 +920,34 @@ open class CompoundTextView @JvmOverloads constructor(
      * @param drawable wrapper, that contains source drawable to fetch
      * @return bounds of drawable from [GravityDrawable] wrapper
      */
-
     private fun fetchCompoundDrawableSourceBounds(
         position: Int,
         drawable: GravityDrawable
     ): Rect {
         val compoundDrawableBounds = fetchCompoundDrawableBounds(position, drawable)
-        val bounds = drawable.source.copyBounds().apply {
-            right += abs(left)
-            bottom += abs(top)
-            left = 0
-            top = 0
+        Log.d(TAG, "compoundDrawableBounds:$compoundDrawableBounds")
+
+        val correctTop = if (position == TOP || position == BOTTOM) {
+            0
+        } else {
+            drawables[TOP].height
+        }
+        val sourceBounds = drawable.source.copyBounds()
+//            .apply {
+//            top = 0
+//            bottom = drawable.source.bounds.height()
+//        }
+        if (position == END) {
+            Log.d(TAG, "sourceBounds:$sourceBounds")
         }
         return compoundDrawableBounds.apply {
-            left += bounds.left
-            right = left + bounds.right
-            top  = bounds.top
-            bottom = top + bounds.bottom
+            left += sourceBounds.left
+//            if (position == TOP || position == BOTTOM) {
+//                left += abs(startDrawableOffset)
+//            }
+            right = left + sourceBounds.width()
+            top += sourceBounds.top
+            bottom = top + sourceBounds.height()
         }
     }
 
