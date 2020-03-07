@@ -469,39 +469,6 @@ open class CompoundTextView @JvmOverloads constructor(
         set
 
     /**
-     * Current padding start
-     *
-     * For SDK version 17+ return [getPaddingStart],
-     * otherwise return [getPaddingLeft]
-     */
-    private var textStartPadding =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            paddingStart
-        } else {
-            paddingLeft
-        }
-        /**
-         * Current padding start
-         */
-        get
-
-    /**
-     * Current padding end
-     *
-     * For SDK version 17+ return [getPaddingEnd],
-     * otherwise return [getPaddingRight]
-     */
-    private var textEndPadding = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-        paddingEnd
-    } else {
-        paddingRight
-    }
-        /**
-         * Current padding end
-         */
-        get
-
-    /**
      * Current drawable width or zero if null
      */
     private val Drawable?.width: Int
@@ -861,8 +828,6 @@ open class CompoundTextView @JvmOverloads constructor(
         y: Int
     ): Boolean {
         val sourceDrawableBounds = fetchCompoundDrawableSourceBounds(position, drawable)
-        Log.d(TAG, "x:$x;y:$y")
-//        Log.d(TAG, "sourceDrawableBounds:$sourceDrawableBounds")
         return sourceDrawableBounds.contains(x, y)
     }
 
