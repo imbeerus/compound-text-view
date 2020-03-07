@@ -38,6 +38,7 @@ import com.lockwood.compound.Position.TOP
 import com.lockwood.compound.transofrmation.GravityTransformation
 import com.lockwood.compound.transofrmation.SizeTransformation
 import com.lockwood.compound.transofrmation.TintTransformation
+import kotlin.math.abs
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -524,6 +525,9 @@ open class CompoundTextView @JvmOverloads constructor(
     private val Context.isRtl
         get() = resources.getBoolean(R.bool.is_right_to_left)
 
+    private var yOffset:Int = 0
+    private var xOffset:Int = 0
+
     // fetch attrs and update compound drawables
     init {
         context.theme.obtainStyledAttributes(
@@ -661,6 +665,7 @@ open class CompoundTextView @JvmOverloads constructor(
 
                 val top = -halfHeight + halfDrawableHeight + verticalOffset
                 val bottom = halfHeight + halfDrawableHeight - verticalOffset
+                yOffset = top
                 updateBounds(top = top, bottom = bottom)
             }
             if (position == TOP || position == BOTTOM) {
@@ -669,7 +674,7 @@ open class CompoundTextView @JvmOverloads constructor(
 
                 val left = -halfWidth + halfDrawableWidth + horizontalOffset
                 val right = halfWidth + halfDrawableWidth - horizontalOffset
-
+                xOffset = left
                 updateBounds(left = left, right = right)
             }
         }
@@ -837,8 +842,6 @@ open class CompoundTextView @JvmOverloads constructor(
         y: Int
     ): Boolean {
         val compoundDrawableBounds = fetchCompoundDrawableBounds(position, drawable)
-        Log.d(TAG, "x:$x; y:$y")
-        Log.d(TAG, "compoundDrawableBounds: $compoundDrawableBounds")
         return compoundDrawableBounds.contains(x, y)
     }
 
@@ -858,8 +861,8 @@ open class CompoundTextView @JvmOverloads constructor(
         y: Int
     ): Boolean {
         val sourceDrawableBounds = fetchCompoundDrawableSourceBounds(position, drawable)
-        Log.d(TAG, "sourceDrawableBounds: $sourceDrawableBounds")
-        Log.d(TAG, "x:$x; y:$y")
+        Log.d(TAG, "x:$x;y:$y")
+//        Log.d(TAG, "sourceDrawableBounds:$sourceDrawableBounds")
         return sourceDrawableBounds.contains(x, y)
     }
 
@@ -925,29 +928,26 @@ open class CompoundTextView @JvmOverloads constructor(
         drawable: GravityDrawable
     ): Rect {
         val compoundDrawableBounds = fetchCompoundDrawableBounds(position, drawable)
-        Log.d(TAG, "compoundDrawableBounds:$compoundDrawableBounds")
 
-        val correctTop = if (position == TOP || position == BOTTOM) {
-            0
+        val bounds = if (position == START || position == END) {
+            val offset = abs(yOffset)
+            drawable.source.copyBounds().apply {
+                top += offset
+                bottom += offset
+            }
         } else {
-            drawables[TOP].height
+            val offset = abs(xOffset)
+            drawable.source.copyBounds().apply {
+                left += offset
+                right += offset
+            }
         }
-        val sourceBounds = drawable.source.copyBounds()
-//            .apply {
-//            top = 0
-//            bottom = drawable.source.bounds.height()
-//        }
-        if (position == END) {
-            Log.d(TAG, "sourceBounds:$sourceBounds")
-        }
+
         return compoundDrawableBounds.apply {
-            left += sourceBounds.left
-//            if (position == TOP || position == BOTTOM) {
-//                left += abs(startDrawableOffset)
-//            }
-            right = left + sourceBounds.width()
-            top += sourceBounds.top
-            bottom = top + sourceBounds.height()
+            left += bounds.left
+            top += bounds.top
+            right = left + bounds.width()
+            bottom = top + bounds.height()
         }
     }
 
