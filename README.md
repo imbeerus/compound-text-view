@@ -29,7 +29,7 @@ allprojects {
 ```
 ```
 dependencies {
-        implementation 'com.github.lndmflngs:compound-text-view:1.2.0'
+        implementation 'com.github.lndmflngs:compound-text-view:1.2.1'
 }
 ```
 
@@ -67,7 +67,6 @@ Attributes | Type | Default | Description
 **drawableTop** | reference | - | Drawable to appear to the top of the view.
 **drawableEnd** | reference | - | Drawable to appear to the end of the view.
 **drawableBottom** | reference | - | Drawable to appear to the bottom of the view.
-**drawableAttachedToText** | boolean | AttachedToText.NO | Drawables will be attached to the beginning/end of the view or to the beginning/end of the text.
 **useCustomTransformation** | boolean | false | Use default or custom transformations for drawables before drawable will be wrapped.
 **handleClickWithinDrawableBounds** | boolean | false | Handle clicks on "gravity" space or on drawable itself.
 
