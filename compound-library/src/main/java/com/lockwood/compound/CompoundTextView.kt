@@ -23,7 +23,6 @@ import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.AttributeSet
-import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
 import androidx.appcompat.content.res.AppCompatResources
@@ -55,7 +54,7 @@ import kotlin.reflect.KProperty
  */
 @SuppressLint("Recycle", "ResourceType")
 open class CompoundTextView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = android.R.attr.textViewStyle
 ) : AppCompatTextView(context, attrs, defStyleAttr) {
 
     /**
@@ -492,8 +491,8 @@ open class CompoundTextView @JvmOverloads constructor(
     private val Context.isRtl
         get() = resources.getBoolean(R.bool.is_right_to_left)
 
-    private var yOffset:Int = 0
-    private var xOffset:Int = 0
+    private var yOffset: Int = 0
+    private var xOffset: Int = 0
 
     // fetch attrs and update compound drawables
     init {
