@@ -611,9 +611,9 @@ open class CompoundTextView @JvmOverloads constructor(
         updateCompoundDrawables()
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        fitDrawablesToViewBounds(measuredWidth, measuredHeight)
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        fitDrawablesToViewBounds(w, h)
     }
 
     private fun fitDrawablesToViewBounds(w: Int, h: Int) {
@@ -753,6 +753,7 @@ open class CompoundTextView @JvmOverloads constructor(
             changedDrawables[END],
             changedDrawables[BOTTOM]
         )
+        onSizeChanged(width, height, 0, 0)
     }
 
     /**
