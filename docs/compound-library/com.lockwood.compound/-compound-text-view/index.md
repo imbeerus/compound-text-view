@@ -27,7 +27,7 @@ Zinovyev Ivan
 
 | Name | Summary |
 |---|---|
-| [&lt;init&gt;](-init-.md) | A [AppCompatTextView](#) which supports set gravity of [drawables](drawables.md) in TextView`CompoundTextView(context: `[`Context`](https://developer.android.com/reference/android/content/Context.html)`, attrs: `[`AttributeSet`](https://developer.android.com/reference/android/util/AttributeSet.html)`? = null, defStyleAttr: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)` = 0)` |
+| [&lt;init&gt;](-init-.md) | A [AppCompatTextView](#) which supports set gravity of [drawables](drawables.md) in TextView`CompoundTextView(context: `[`Context`](https://developer.android.com/reference/android/content/Context.html)`, attrs: `[`AttributeSet`](https://developer.android.com/reference/android/util/AttributeSet.html)`? = null, defStyleAttr: `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html)` = android.R.attr.textViewStyle)` |
 
 ### Properties
 

@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'org.jetbrains.dokka'
+//apply plugin: 'org.jetbrains.dokka'
 
 group = 'com.github.lndmflngs'
 
@@ -36,22 +36,22 @@ repositories {
     mavenCentral()
 }
 
-dokka {
-    outputFormat = "gfm"
-    outputDirectory="docs"
-    cacheRoot = 'default'
-
-    configuration {
-        includeNonPublic = false
-        skipDeprecated = true
-        reportUndocumented = true
-        skipEmptyPackages = true
-        jdkVersion = 8
-
-        sourceLink {
-            path = "src/main/java"
-            url = "https://github.com/lndmflngs/compound-text-view/tree/master/compound-library/src/main/java"
-            lineSuffix = "#L"
-        }
-    }
-}
+//dokka {
+//    outputFormat = "gfm"
+//    outputDirectory="docs"
+//    cacheRoot = 'default'
+//
+//    configuration {
+//        includeNonPublic = false
+//        skipDeprecated = true
+//        reportUndocumented = true
+//        skipEmptyPackages = true
+//        jdkVersion = 8
+//
+//        sourceLink {
+//            path = "src/main/java"
+//            url = "https://github.com/lndmflngs/compound-text-view/tree/master/compound-library/src/main/java"
+//            lineSuffix = "#L"
+//        }
+//    }
+//}

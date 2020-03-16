@@ -6,14 +6,6 @@
 |---|---|
 |
 
-##### [com.lockwood.compound.AttachedToText](../com.lockwood.compound/-attached-to-text/index.md)
-
-Determines whether the drawables will be attached to the beginning/end of the view
-or will be attached to the beginning/end of the text
-
-
-|
-
 ##### [com.lockwood.compound.CompoundTextView](../com.lockwood.compound/-compound-text-view/index.md)
 
 A [AppCompatTextView](#) which supports set gravity of [drawables](../com.lockwood.compound/-compound-text-view/drawables.md) in TextView

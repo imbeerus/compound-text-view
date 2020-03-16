@@ -40,4 +40,6 @@ before wrapping, otherwise internal {@link Callback} may be dropped.
 | [draw](draw.md) | `fun draw(canvas: `[`Canvas`](https://developer.android.com/reference/android/graphics/Canvas.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
 | [getIntrinsicHeight](get-intrinsic-height.md) | `fun getIntrinsicHeight(): `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
 | [getIntrinsicWidth](get-intrinsic-width.md) | `fun getIntrinsicWidth(): `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
-| [onBoundsChange](on-bounds-change.md) | `fun onBoundsChange(paddingBounds: `[`Rect`](https://developer.android.com/reference/android/graphics/Rect.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
+| [getMinimumHeight](get-minimum-height.md) | `fun getMinimumHeight(): `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
+| [getMinimumWidth](get-minimum-width.md) | `fun getMinimumWidth(): `[`Int`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
+| [onBoundsChange](on-bounds-change.md) | `fun onBoundsChange(bounds: `[`Rect`](https://developer.android.com/reference/android/graphics/Rect.html)`): `[`Unit`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html) |
