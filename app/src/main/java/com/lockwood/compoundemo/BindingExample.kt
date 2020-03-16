@@ -20,9 +20,9 @@ fun CompoundTextView.setGravityDrawables(
     endDrawable: Drawable? = null,
     bottomDrawable: Drawable? = null
 ) {
-    val start = startDrawable ?: drawables[Position.START]
-    val top = topDrawable ?: drawables[Position.TOP]
-    val end = endDrawable ?: drawables[Position.END]
-    val bottom = bottomDrawable ?: drawables[Position.BOTTOM]
+    val start = startDrawable ?: this.startDrawable
+    val top = topDrawable ?: this.topDrawable
+    val end = endDrawable ?: this.endDrawable
+    val bottom = bottomDrawable ?: this.bottomDrawable
     setDrawables(start, top, end, bottom)
 }
