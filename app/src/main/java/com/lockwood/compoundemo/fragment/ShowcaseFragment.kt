@@ -12,7 +12,6 @@ import androidx.annotation.ArrayRes
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.fragment.app.Fragment
-import com.lockwood.compound.AttachedToText
 import com.lockwood.compound.CompoundViewClickListener
 import com.lockwood.compound.Position
 import com.lockwood.compoundemo.R

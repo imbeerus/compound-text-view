@@ -19,13 +19,10 @@ package com.lockwood.compound
 import android.annotation.SuppressLint
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.graphics.Path
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.Gravity
 import androidx.appcompat.graphics.drawable.DrawableWrapper
-import androidx.core.graphics.toRectF
 import kotlin.math.abs
 
 /**
@@ -95,38 +92,39 @@ class GravityDrawable(
             return result.toIntArray()
         }
 
+
     /**
      * Paint for drawing blank space
      */
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).also {
-        it.setARGB(0, 0, 0, 0)
-//      used to see gravity background (blank space)
-//        it.setARGB(255 / 6, 255, 0, 0)
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        setARGB(0, 0, 0, 0)
+//        setARGB(255 / 6, 255, 0, 0)
     }
 
     /**
-     * Result path of drawable (with blank space)
+     * Result rect of drawable (blank space)
      */
-    private val paddingPath = Path()
+    private val paddingBounds = Rect(0, 0, minimumWidth, minimumHeight)
 
-    override fun getIntrinsicWidth() = sourceWidth + padding
+    override fun getMinimumWidth() = sourceWidth + padding
 
-    override fun getIntrinsicHeight() = sourceHeight + padding
+    override fun getMinimumHeight() = sourceHeight + padding
+
+    override fun getIntrinsicWidth() = minimumWidth
+
+    override fun getIntrinsicHeight() = minimumHeight
 
     override fun draw(canvas: Canvas) = with(canvas) {
         // draw blank space
-        drawPath(paddingPath, paint)
+        drawRect(paddingBounds, paint)
         // draw source drawable
         source.draw(this)
     }
 
-    @ExperimentalStdlibApi
-    override fun onBoundsChange(paddingBounds: Rect) {
+    override fun onBoundsChange(bounds: Rect) {
         // change result path drawable
-        paddingPath.run {
-            reset()
-            paddingPath.addRect(paddingBounds.toRectF(), Path.Direction.CW)
-        }
+        paddingBounds.set(bounds)
         // refresh bounds for source
         source.bounds = fetchDrawableBounds(paddingBounds)
     }
@@ -173,8 +171,8 @@ class GravityDrawable(
                 }
             }
         }
-        val hPosition = mutableListOf(paddingBounds.left, paddingBounds.right)
-        val vPosition = mutableListOf(paddingBounds.top, paddingBounds.bottom)
+        val hPosition = mutableListOf(0, 0)
+        val vPosition = mutableListOf(0, 0)
         val hPositions = gravityToSet[0].map { fetchHorizontalPositions(paddingBounds, it) }
         val vPositions = gravityToSet[1].map { fetchVerticalPositions(paddingBounds, it) }
         hPositions.forEach {
@@ -259,33 +257,4 @@ class GravityDrawable(
         private val TAG = GravityDrawable::class.java.simpleName
     }
 
-}
-
-/**
- * Determines whether the drawables will be attached to the beginning/end of the view
- * or will be attached to the beginning/end of the text
- */
-object AttachedToText {
-
-    /**
-     * Drawables (Top, Bottom) will be attached to the beginning/end of the view
-     */
-    const val NO = 0
-
-    /**
-     * Top drawable will be attached to the beginning/end of the text
-     * Bottom drawable will be attached to the beginning/end of the view
-     */
-    const val TOP = 1
-
-    /**
-     * Bottom drawable will be attached to the beginning/end of the text
-     * Top drawable will be attached to the beginning/end of the view
-     */
-    const val BOTTOM = 2
-
-    /**
-     * Drawables (Top, Bottom) will be attached to the beginning/end of the text
-     */
-    const val ALL = 3
 }
