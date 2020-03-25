@@ -48,7 +48,6 @@ The simplest way is to use `CompoundTextView` like a normal `TextView`
     app:text="Item" />
 ```
 ### Data binding
-
 If you use data binding you can use [this][10] adapter
 
 ### Loading images
