@@ -87,7 +87,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableStart]
      */
-    var startDrawable by drawablesProperty { START }
+    var startDrawable by drawableProperty { START }
         /**
          * Drawable on the start or null if it's empty
          */
@@ -103,7 +103,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableEnd]
      */
-    var endDrawable by drawablesProperty { END }
+    var endDrawable by drawableProperty { END }
         /**
          * Drawable on the end or null if it's empty
          */
@@ -119,7 +119,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableTop]
      */
-    var topDrawable by drawablesProperty { TOP }
+    var topDrawable by drawableProperty { TOP }
         /**
          * Drawable on the top or null if it's empty
          */
@@ -135,7 +135,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableBottom]
      */
-    var bottomDrawable by drawablesProperty { BOTTOM }
+    var bottomDrawable by drawableProperty { BOTTOM }
         /**
          * Drawable on the bottom or null if it's empty
          */
@@ -152,7 +152,7 @@ open class CompoundTextView @JvmOverloads constructor(
      * @attr [R.styleable.CompoundTextView_drawableGravity]
      * @see GravityDrawable.gravityToUse for available gravities
      */
-    var drawableGravity by commonGravityProperty()
+    var drawableGravity by commonDrawableGravityProperty()
         /**
          * Gravity for all drawables
          */
@@ -167,7 +167,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableStartGravity]
      */
-    var drawableStartGravity by gravityProperty { START }
+    var drawableStartGravity by drawableGravityProperty { START }
         /**
          * Gravity for [startDrawable]
          */
@@ -182,7 +182,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableEndGravity]
      */
-    var drawableEndGravity by gravityProperty { END }
+    var drawableEndGravity by drawableGravityProperty { END }
         /**
          * Gravity for [endDrawable]
          */
@@ -197,7 +197,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableTopGravity]
      */
-    var drawableTopGravity by gravityProperty { TOP }
+    var drawableTopGravity by drawableGravityProperty { TOP }
         /**
          * Gravity for [topDrawable]
          */
@@ -212,7 +212,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableBottomGravity]
      */
-    var drawableBottomGravity by gravityProperty { BOTTOM }
+    var drawableBottomGravity by drawableGravityProperty { BOTTOM }
         /**
          * Gravity for [bottomDrawable]
          */
@@ -227,7 +227,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawablePadding]
      */
-    var drawablePadding by commonPaddingProperty()
+    var drawablePadding by commonDrawablePaddingProperty()
         /**
          * Padding for all drawables
          */
@@ -242,7 +242,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableStartPadding]
      */
-    var drawableStartPadding by paddingProperty { START }
+    var drawableStartPadding by drawablePaddingProperty { START }
         /**
          * Padding for [startDrawable]
          */
@@ -257,7 +257,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableEndPadding]
      */
-    var drawableEndPadding by paddingProperty { END }
+    var drawableEndPadding by drawablePaddingProperty { END }
         /**
          * Padding for [endDrawable]
          */
@@ -272,7 +272,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableTopPadding]
      */
-    var drawableTopPadding by paddingProperty { TOP }
+    var drawableTopPadding by drawablePaddingProperty { TOP }
         /**
          * Padding for [topDrawable]
          */
@@ -287,7 +287,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableBottomPadding]
      */
-    var drawableBottomPadding by paddingProperty { BOTTOM }
+    var drawableBottomPadding by drawablePaddingProperty { BOTTOM }
         /**
          * Padding for [bottomDrawable]
          */
@@ -302,7 +302,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableTint]
      */
-    var drawableTint by commonTintProperty()
+    var drawableTint by commonDrawableTintProperty()
         /**
          * Tint for all drawables
          */
@@ -317,7 +317,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableStartTint]
      */
-    var drawableStartTint by tintProperty { START }
+    var drawableStartTint by drawableTintProperty { START }
         get
         /**
          * Tint for [startDrawable], then [updateCompoundDrawables]
@@ -329,7 +329,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableEndTint]
      */
-    var drawableEndTint by tintProperty { END }
+    var drawableEndTint by drawableTintProperty { END }
         /**
          * Tint for [endDrawable], then [updateCompoundDrawables]
          */
@@ -340,7 +340,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableTopTint]
      */
-    var drawableTopTint by tintProperty { TOP }
+    var drawableTopTint by drawableTintProperty { TOP }
         /**
          * Tint for [topDrawable], then [updateCompoundDrawables]
          */
@@ -351,7 +351,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableBottomTint]
      */
-    var drawableBottomTint by tintProperty { BOTTOM }
+    var drawableBottomTint by drawableTintProperty { BOTTOM }
         /**
          * Tint for [bottomDrawable], then [updateCompoundDrawables]
          */
@@ -362,7 +362,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableSize]
      */
-    var drawableCustomSize by commonSizeProperty()
+    var drawableCustomSize by commonDrawableSizeProperty()
         /**
          * Size for all drawables, then [updateCompoundDrawables]
          */
@@ -373,7 +373,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableStartSize]
      */
-    var drawableStartCustomSize by sizeProperty { START }
+    var drawableStartCustomSize by drawableSizeProperty { START }
         /**
          * Size for [startDrawable], then [updateCompoundDrawables]
          */
@@ -384,7 +384,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableTopSize]
      */
-    var drawableTopCustomSize by sizeProperty { TOP }
+    var drawableTopCustomSize by drawableSizeProperty { TOP }
         /**
          * Size for [topDrawable], then [updateCompoundDrawables]
          */
@@ -395,7 +395,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableEndSize]
      */
-    var drawableEndCustomSize by sizeProperty { END }
+    var drawableEndCustomSize by drawableSizeProperty { END }
         /**
          * Size for [endDrawable], then [updateCompoundDrawables]
          */
@@ -406,7 +406,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_drawableBottomSize]
      */
-    var drawableBottomCustomSize by sizeProperty { BOTTOM }
+    var drawableBottomCustomSize by drawableSizeProperty { BOTTOM }
         /**
          * Size for [startDrawable], then [updateCompoundDrawables]
          */
@@ -945,7 +945,7 @@ open class CompoundTextView @JvmOverloads constructor(
      * @param position of drawable to store
      * @return property that store drawable at specific [position]
      */
-    protected inline fun drawablesProperty(
+    protected inline fun drawableProperty(
         position: () -> Int
     ) = CompoundArrayPositionProperty(gravityDrawables, position())
 
@@ -955,7 +955,7 @@ open class CompoundTextView @JvmOverloads constructor(
      * @param position of drawable gravity to store
      * @return property that store gravity for drawable at specific [position]
      */
-    protected inline fun gravityProperty(
+    protected inline fun drawableGravityProperty(
         position: () -> Int
     ) = CompoundArrayPositionProperty(drawablesGravity, position())
 
@@ -964,7 +964,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @return property that store value independently
      */
-    protected inline fun commonGravityProperty(
+    protected inline fun commonDrawableGravityProperty(
         default: () -> Int = { DEF_GRAVITY }
     ) = CompoundArrayProperty(drawablesGravity, default())
 
@@ -974,7 +974,7 @@ open class CompoundTextView @JvmOverloads constructor(
      * @param position of drawable padding to store
      * @return property that store padding for drawable at specific [position]
      */
-    protected inline fun paddingProperty(
+    protected inline fun drawablePaddingProperty(
         position: () -> Int
     ) = CompoundArrayPositionProperty(drawablesPadding, position())
 
@@ -983,7 +983,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @return property that store padding value independently
      */
-    protected inline fun commonPaddingProperty(
+    protected inline fun commonDrawablePaddingProperty(
         default: () -> Int = { DEF_PADDING }
     ) = CompoundArrayProperty(drawablesPadding, default())
 
@@ -993,7 +993,7 @@ open class CompoundTextView @JvmOverloads constructor(
      * @param position of drawable tint to store
      * @return property that store tint for drawable at specific [position]
      */
-    protected inline fun tintProperty(
+    protected inline fun drawableTintProperty(
         position: () -> Int
     ) = CompoundArrayPositionProperty(drawablesTint, position())
 
@@ -1002,7 +1002,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @return property that store tint value independently
      */
-    protected fun commonTintProperty(
+    protected fun commonDrawableTintProperty(
         default: () -> Int = { DEF_TINT_COLOR }
     ) = CompoundArrayProperty(drawablesTint, default())
 
@@ -1012,7 +1012,7 @@ open class CompoundTextView @JvmOverloads constructor(
      * @param position of drawable size to store
      * @return property that store size for drawable at specific [position]
      */
-    protected inline fun sizeProperty(
+    protected inline fun drawableSizeProperty(
         position: () -> Int
     ) = CompoundArrayPositionProperty(drawablesSize, position())
 
@@ -1021,7 +1021,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @return property that store size value independently
      */
-    protected fun commonSizeProperty(
+    protected fun commonDrawableSizeProperty(
         default: () -> Int = { DEF_SIZE }
     ) = CompoundArrayProperty(drawablesSize, default())
 
