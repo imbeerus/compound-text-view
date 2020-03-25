@@ -2,7 +2,7 @@
 [![API](https://img.shields.io/badge/API-15%2B-orange.svg?style=flat-square)](https://android-arsenal.com/api?level=15)
 [![License](https://img.shields.io/badge/license-Apache%202-red.svg?style=flat-square&logo=license)](https://www.apache.org/licenses/LICENSE-2.0)
 [![](https://img.shields.io/badge/docs-dokka-blue.svg?style=flat-square&logo=kotlin)](https://github.com/lndmflngs/compound-text-view/blob/master/docs/compound-library/index.md)
-![Android CI](https://github.com/lndmflngs/compound-text-view/workflows/Android%20CI/badg.svg?branch=master)
+![Android CI](https://github.com/lndmflngs/compound-text-view/workflows/Android%20CI/badge.svg?branch=master)
 [![](https://jitpack.io/v/lndmflngs/compound-text-view.svg?style=flat-square)](https://jitpack.io/#lndmflngs/compound-text-view)
 [![](https://img.shields.io/badge/apk-demo-blueviolet?style=flat-square&logo=android)][1]
 
