@@ -47,13 +47,14 @@ The simplest way is to use `CompoundTextView` like a normal `TextView`
     app:drawableStart="@drawable/image"
     app:text="Item" />
 ```
+### Data binding
+
+If you use data binding you can use [this][10] adapter
 
 ### Loading images
 There are several libraries that follow best practices for loading images. You can use these libraries in your app to load images in the most optimized manner. I recommend Glide, but you can use others: Picasso, Coil.
 
 **Examples**: [Glide][5], [Picasso][6], [Coil][7]
-
-**Data binding**: you can use [this][10] adapter
 
 ### CompoundTextView Attrs
 
