@@ -41,7 +41,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.2.0'
-    implementation "com.google.android.material:material:1.2.0-alpha05"
+    implementation 'com.google.android.material:material:1.2.0-alpha06'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation project(path: ':compound-library')
 
@@ -50,7 +50,7 @@ dependencies {
     kapt 'com.github.bumptech.glide:compiler:4.11.0'
 
     // Image loading for Android backed by Kotlin Coroutines. https://coil-kt.github.io/coil/
-    implementation "io.coil-kt:coil:0.9.5"
+    implementation 'io.coil-kt:coil:0.10.0'
 
     // A powerful image downloading and caching library for Android https://square.github.io/picasso/
     implementation 'com.squareup.picasso:picasso:2.71828'

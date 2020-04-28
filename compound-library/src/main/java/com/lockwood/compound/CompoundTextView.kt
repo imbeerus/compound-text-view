@@ -619,15 +619,15 @@ open class CompoundTextView @JvmOverloads constructor(
     private fun fitDrawablesToViewBounds(w: Int, h: Int) {
         val verticalOffset = drawables
             .filterIndexed { i, _ -> i == TOP || i == BOTTOM }
-            .sumBy { it.height } shr 1
+            .sumBy { it.height } / 2
         val horizontalOffset = drawables
             .filterIndexed { i, _ -> i == START || i == END }
-            .sumBy { it.width } shr 1
+            .sumBy { it.width } / 2
 
         updateDrawables { position ->
             if (position == START || position == END) {
-                val halfHeight = h shr 1
-                val halfDrawableHeight = height shr 1
+                val halfHeight = h / 2
+                val halfDrawableHeight = height / 2
 
                 val top = -halfHeight + halfDrawableHeight + verticalOffset
                 val bottom = halfHeight + halfDrawableHeight - verticalOffset
@@ -635,8 +635,8 @@ open class CompoundTextView @JvmOverloads constructor(
                 updateBounds(top = top, bottom = bottom)
             }
             if (position == TOP || position == BOTTOM) {
-                val halfWidth = w shr 1
-                val halfDrawableWidth = width shr 1
+                val halfWidth = w / 2
+                val halfDrawableWidth = width / 2
 
                 val left = -halfWidth + halfDrawableWidth + horizontalOffset
                 val right = halfWidth + halfDrawableWidth - horizontalOffset

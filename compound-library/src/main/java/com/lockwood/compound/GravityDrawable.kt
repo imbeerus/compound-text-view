@@ -207,7 +207,7 @@ class GravityDrawable(
                 top = bottom - sourceHeight
             }
             Gravity.CENTER_VERTICAL, Gravity.CENTER -> {
-                top = (intrinsicHeight shr 1) - (sourceHeight shr 1)
+                top = (intrinsicHeight / 2) - (sourceHeight / 2)
                 bottom = top + sourceHeight
             }
             // Gravity.TOP = DEF
@@ -240,7 +240,7 @@ class GravityDrawable(
                 left = right - sourceWidth
             }
             Gravity.CENTER_HORIZONTAL, Gravity.CENTER -> {
-                left = (intrinsicWidth shr 1) - (sourceWidth shr 1)
+                left = (intrinsicWidth / 2) - (sourceWidth / 2)
                 right = left + sourceWidth
             }
             // Gravity.START = DEF
