@@ -3,7 +3,6 @@ package com.lockwood.compoundemo
 import android.graphics.drawable.Drawable
 import androidx.databinding.BindingAdapter
 import com.lockwood.compound.CompoundTextView
-import com.lockwood.compound.Position
 
 @BindingAdapter(
     value = [

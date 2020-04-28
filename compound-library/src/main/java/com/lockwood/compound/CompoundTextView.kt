@@ -34,12 +34,13 @@ import com.lockwood.compound.Position.BOTTOM
 import com.lockwood.compound.Position.END
 import com.lockwood.compound.Position.START
 import com.lockwood.compound.Position.TOP
+import com.lockwood.compound.delegate.CompoundArrayDelegate
+import com.lockwood.compound.delegate.CompoundArrayPositionDelegate
+import com.lockwood.compound.delegate.CompoundDrawableDelegate
 import com.lockwood.compound.transofrmation.GravityTransformation
 import com.lockwood.compound.transofrmation.SizeTransformation
 import com.lockwood.compound.transofrmation.TintTransformation
 import kotlin.math.abs
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
 
 /**
  * A [AppCompatTextView] which supports set gravity of [drawables] in TextView
@@ -56,6 +57,31 @@ import kotlin.reflect.KProperty
 open class CompoundTextView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = android.R.attr.textViewStyle
 ) : AppCompatTextView(context, attrs, defStyleAttr) {
+
+    companion object {
+
+        private val TAG = CompoundTextView::class.java.simpleName
+
+        /** @suppress */
+        const val DEF_USE_CUSTOM_TRANSFORMATION = false
+
+        /** @suppress */
+        const val DEF_HANDLE_CLICK_WITHIN_DRAWABLE_BOUNDS = false
+
+        /** @suppress */
+        const val DEF_GRAVITY = Gravity.NO_GRAVITY
+
+        /** @suppress */
+        const val DEF_PADDING = 0
+
+        /** @suppress */
+        const val DEF_SIZE = 0
+
+        /** @suppress */
+        const val DEF_TINT_COLOR = -1
+
+        private const val DEF_DRAWABLES_SIZE = 4
+    }
 
     /**
      * Array of [Drawable] which will be transformed and shown
@@ -673,7 +699,8 @@ open class CompoundTextView @JvmOverloads constructor(
     fun setCompoundDrawablesTouchListener(listener: CompoundViewClickListener) =
         setOnTouchListener { _, e ->
             // prevent calling onViewClick if one of the drawables was clicked
-            return@setOnTouchListener if (e.isClick) {
+            val isClick = e.eventTime == e.downTime
+            return@setOnTouchListener if (isClick) {
 
                 val positions = arrayOf(START, TOP, END, BOTTOM)
                 val touchedDrawables = positions.map { isDrawableClicked(it, e) }
@@ -754,16 +781,6 @@ open class CompoundTextView @JvmOverloads constructor(
             changedDrawables[BOTTOM]
         )
     }
-
-    /**
-     * Check is click based on [MotionEvent] time,
-     * it was called before (on down time) or not
-     */
-    private val MotionEvent.isClick
-        /**
-         * Is one time event (click)
-         */
-        get() = eventTime == downTime
 
     /**
      * Compare drawable bounds and [event] coordinates to check
@@ -928,6 +945,7 @@ open class CompoundTextView @JvmOverloads constructor(
         null
     }
 
+    //region Drawable property functions
     /**
      * Make drawable related property (store [T] and call [updateCompoundDrawables] on set)
      *
@@ -935,9 +953,11 @@ open class CompoundTextView @JvmOverloads constructor(
      * @param default value on get
      * @return drawable related property that store specific value
      */
-    protected inline fun <T> updateDrawablesProperty(
+    private inline fun <T> updateDrawablesProperty(
         default: () -> T
-    ) = CompoundDrawableProperty(default())
+    ): CompoundDrawableDelegate<T> {
+        return CompoundDrawableDelegate(default()) { updateCompoundDrawables() }
+    }
 
     /**
      * Make property that store [Drawable] at specific [position] in [gravityDrawables]
@@ -945,9 +965,14 @@ open class CompoundTextView @JvmOverloads constructor(
      * @param position of drawable to store
      * @return property that store drawable at specific [position]
      */
-    protected inline fun drawableProperty(
+    private inline fun drawableProperty(
         position: () -> Int
-    ) = CompoundArrayPositionProperty(gravityDrawables, position())
+    ): CompoundArrayPositionDelegate<Drawable?> {
+        return CompoundArrayPositionDelegate(
+            gravityDrawables,
+            position()
+        ) { updateCompoundDrawables() }
+    }
 
     /**
      * Make property that store gravity for drawable at specific [position] in [drawablesGravity]
@@ -955,18 +980,25 @@ open class CompoundTextView @JvmOverloads constructor(
      * @param position of drawable gravity to store
      * @return property that store gravity for drawable at specific [position]
      */
-    protected inline fun drawableGravityProperty(
+    private inline fun drawableGravityProperty(
         position: () -> Int
-    ) = CompoundArrayPositionProperty(drawablesGravity, position())
+    ): CompoundArrayPositionDelegate<Int> {
+        return CompoundArrayPositionDelegate(
+            drawablesGravity,
+            position()
+        ) { updateCompoundDrawables() }
+    }
 
     /**
      * Make property that store independent gravity value (common gravity for all drawables)
      *
      * @return property that store value independently
      */
-    protected inline fun commonDrawableGravityProperty(
+    private inline fun commonDrawableGravityProperty(
         default: () -> Int = { DEF_GRAVITY }
-    ) = CompoundArrayProperty(drawablesGravity, default())
+    ): CompoundArrayDelegate<Int> {
+        return CompoundArrayDelegate(drawablesGravity, default()) { updateCompoundDrawables() }
+    }
 
     /**
      * Make property that store padding for drawable at specific [position] in [drawablesPadding]
@@ -974,18 +1006,25 @@ open class CompoundTextView @JvmOverloads constructor(
      * @param position of drawable padding to store
      * @return property that store padding for drawable at specific [position]
      */
-    protected inline fun drawablePaddingProperty(
+    private inline fun drawablePaddingProperty(
         position: () -> Int
-    ) = CompoundArrayPositionProperty(drawablesPadding, position())
+    ): CompoundArrayPositionDelegate<Int> {
+        return CompoundArrayPositionDelegate(
+            drawablesPadding,
+            position()
+        ) { updateCompoundDrawables() }
+    }
 
     /**
      * Make property that store independent padding value (common padding for all drawables)
      *
      * @return property that store padding value independently
      */
-    protected inline fun commonDrawablePaddingProperty(
+    private inline fun commonDrawablePaddingProperty(
         default: () -> Int = { DEF_PADDING }
-    ) = CompoundArrayProperty(drawablesPadding, default())
+    ): CompoundArrayDelegate<Int> {
+        return CompoundArrayDelegate(drawablesPadding, default()) { updateCompoundDrawables() }
+    }
 
     /**
      * Make property that store tint for drawable at specific [position] in [drawablesTint]
@@ -993,18 +1032,25 @@ open class CompoundTextView @JvmOverloads constructor(
      * @param position of drawable tint to store
      * @return property that store tint for drawable at specific [position]
      */
-    protected inline fun drawableTintProperty(
+    private inline fun drawableTintProperty(
         position: () -> Int
-    ) = CompoundArrayPositionProperty(drawablesTint, position())
+    ): CompoundArrayPositionDelegate<Int> {
+        return CompoundArrayPositionDelegate(
+            drawablesTint,
+            position()
+        ) { updateCompoundDrawables() }
+    }
 
     /**
      * Make property that store independent tint value (common tint for all drawables)
      *
      * @return property that store tint value independently
      */
-    protected fun commonDrawableTintProperty(
+    private fun commonDrawableTintProperty(
         default: () -> Int = { DEF_TINT_COLOR }
-    ) = CompoundArrayProperty(drawablesTint, default())
+    ): CompoundArrayDelegate<Int> {
+        return CompoundArrayDelegate(drawablesTint, default()) { updateCompoundDrawables() }
+    }
 
     /**
      * Make property that store size for drawable at specific [position] in [drawablesSize]
@@ -1012,118 +1058,26 @@ open class CompoundTextView @JvmOverloads constructor(
      * @param position of drawable size to store
      * @return property that store size for drawable at specific [position]
      */
-    protected inline fun drawableSizeProperty(
+    private inline fun drawableSizeProperty(
         position: () -> Int
-    ) = CompoundArrayPositionProperty(drawablesSize, position())
+    ): CompoundArrayPositionDelegate<Int> {
+        return CompoundArrayPositionDelegate(
+            drawablesSize,
+            position()
+        ) { updateCompoundDrawables() }
+    }
 
     /**
      * Make property that store independent size value (common size for all drawables)
      *
      * @return property that store size value independently
      */
-    protected fun commonDrawableSizeProperty(
+    private fun commonDrawableSizeProperty(
         default: () -> Int = { DEF_SIZE }
-    ) = CompoundArrayProperty(drawablesSize, default())
-
-    /**
-     * Property that store drawable related value
-     *
-     * @param T type of stored [value]
-     * @param default vale for property
-     */
-    protected inner class CompoundDrawableProperty<T>(
-        private val default: T
-    ) : ReadWriteProperty<Any?, T> {
-
-        private var value: T? = null
-
-        /**
-         * @return current [value] or [default] if value is null
-         */
-        override fun getValue(
-            thisRef: Any?,
-            property: KProperty<*>
-        ): T = value ?: default
-
-        /**
-         * Set [value] and then update state of compound drawables
-         *
-         * @see updateCompoundDrawables
-         */
-        override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
-            this.value = value
-            updateCompoundDrawables()
-        }
-
+    ): CompoundArrayDelegate<Int> {
+        return CompoundArrayDelegate(drawablesSize, default()) { updateCompoundDrawables() }
     }
-
-    /**
-     * Property that store drawable related value in [array] at specific [position]
-     *
-     * @param T type of stored value
-     * @param array to store values
-     * @param position of value (drawable)
-     */
-    protected inner class CompoundArrayPositionProperty<T>(
-        private val array: Array<T>,
-        private val position: Int
-    ) : ReadWriteProperty<Any?, T> {
-
-        /**
-         * @return value from [array] at [position]
-         */
-        override fun getValue(
-            thisRef: Any?,
-            property: KProperty<*>
-        ): T = array[position]
-
-        /**
-         * Set value in [array] at [position] and then update state of compound drawables
-         *
-         * @see updateCompoundDrawables
-         */
-        override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
-            array[position] = value
-            updateCompoundDrawables()
-        }
-
-    }
-
-    /**
-     * Property that store drawable related [value] and store it in [array] also
-     * (for storing common values for all drawables)
-     *
-     * @param T type of stored values
-     * @param array to store values
-     * @param default vale for property
-     */
-    protected inner class CompoundArrayProperty<T>(
-        private val array: Array<T>,
-        private val default: T
-    ) : ReadWriteProperty<Any?, T> {
-
-        private var value: T? = null
-
-        /**
-         * @return current [value] or [default] if value is null
-         */
-        override fun getValue(
-            thisRef: Any?,
-            property: KProperty<*>
-        ): T = value ?: default
-
-        /**
-         * Set [value], set same value for all elements in [array], then update state of compound drawables
-         *
-         * @see updateCompoundDrawables
-         */
-        override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
-            this.value = value
-            array.forEachIndexed { i, _ -> array[i] = value }
-            updateCompoundDrawables()
-        }
-
-    }
+    //endregion
 
     private inline fun updateDrawables(
         update: Drawable.(Int) -> Unit = {}
@@ -1131,31 +1085,6 @@ open class CompoundTextView @JvmOverloads constructor(
         if (drawable != null) {
             drawables[position]!!.update(position)
         }
-    }
-
-    companion object {
-
-        private val TAG = CompoundTextView::class.java.simpleName
-
-        /** @suppress */
-        const val DEF_USE_CUSTOM_TRANSFORMATION = false
-
-        /** @suppress */
-        const val DEF_HANDLE_CLICK_WITHIN_DRAWABLE_BOUNDS = false
-
-        /** @suppress */
-        const val DEF_GRAVITY = Gravity.NO_GRAVITY
-
-        /** @suppress */
-        const val DEF_PADDING = 0
-
-        /** @suppress */
-        const val DEF_SIZE = 0
-
-        /** @suppress */
-        const val DEF_TINT_COLOR = -1
-
-        private const val DEF_DRAWABLES_SIZE = 4
     }
 
 }

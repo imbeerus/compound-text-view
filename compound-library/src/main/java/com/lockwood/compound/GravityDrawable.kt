@@ -86,9 +86,11 @@ class GravityDrawable(
     private val gravityToUse: IntArray
         get() {
             val result = mutableListOf<Int>()
-            result.addAll(otherPositions.toTypedArray())
-            result.addAll(horizontalPositions.toTypedArray())
-            result.addAll(verticalPositions.toTypedArray())
+            with(result) {
+                addAll(otherPositions.toTypedArray())
+                addAll(horizontalPositions.toTypedArray())
+                addAll(verticalPositions.toTypedArray())
+            }
             return result.toIntArray()
         }
 
@@ -107,13 +109,21 @@ class GravityDrawable(
      */
     private val paddingBounds = Rect(0, 0, minimumWidth, minimumHeight)
 
-    override fun getMinimumWidth() = sourceWidth + padding
+    override fun getMinimumWidth(): Int {
+        return sourceWidth + padding
+    }
 
-    override fun getMinimumHeight() = sourceHeight + padding
+    override fun getMinimumHeight(): Int {
+        return sourceHeight + padding
+    }
 
-    override fun getIntrinsicWidth() = minimumWidth
+    override fun getIntrinsicWidth(): Int {
+        return minimumWidth
+    }
 
-    override fun getIntrinsicHeight() = minimumHeight
+    override fun getIntrinsicHeight(): Int {
+        return minimumHeight
+    }
 
     override fun draw(canvas: Canvas) = with(canvas) {
         // draw blank space
