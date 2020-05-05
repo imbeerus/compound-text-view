@@ -50,7 +50,7 @@ dependencies {
     kapt 'com.github.bumptech.glide:compiler:4.11.0'
 
     // Image loading for Android backed by Kotlin Coroutines. https://coil-kt.github.io/coil/
-    implementation 'io.coil-kt:coil:0.10.0'
+    implementation 'io.coil-kt:coil:0.10.1'
 
     // A powerful image downloading and caching library for Android https://square.github.io/picasso/
     implementation 'com.squareup.picasso:picasso:2.71828'
