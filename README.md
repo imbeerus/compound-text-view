@@ -81,7 +81,7 @@ Images provided by [kivnor][8]
 * [**hat-view**](https://github.com/lndmflngs/hat-view) - Allow to put "hat" on TextView 🎅🏻
 * [**multispan-view**](https://github.com/lndmflngs/multispan-view) - TextView with power of Spans 💪
 * [**roboto-span-view**](https://github.com/lndmflngs/roboto-span-view) - Multi span TextView with Roboto fonts
-* [**font-span-view**](https://github.com/lndmflngs/fibt-span-view) - Multi span TextView with custom fonts
+* [**font-span-view**](https://github.com/lndmflngs/font-span-view) - Multi span TextView with custom fonts
 
 ## Issue Tracking
 Found a bug? Have an idea for an improvement? Feel free to [add an issue](../../issues)
