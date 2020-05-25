@@ -12,8 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import coil.Coil
-import coil.api.load
+import coil.request.LoadRequest
 import com.bumptech.glide.request.target.CustomViewTarget
 import com.bumptech.glide.request.transition.Transition
 import com.lockwood.compound.CompoundTextView
@@ -26,6 +25,14 @@ import com.squareup.picasso.Target
 import kotlinx.android.synthetic.main.fragment_recycler.*
 
 class RecyclerFragment : Fragment(R.layout.fragment_recycler) {
+
+    companion object {
+
+        private const val ITEM_COUNT = 300
+
+        fun newInstance() = RecyclerFragment()
+
+    }
 
     private val images
         get() = arrayOf(
@@ -45,7 +52,7 @@ class RecyclerFragment : Fragment(R.layout.fragment_recycler) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView.apply {
+        with(recyclerView) {
             layoutManager = LinearLayoutManager(ctx)
             adapter = AvatarAdapter(imagesToShow)
             addItemDecoration(DividerItemDecoration(ctx, DividerItemDecoration.VERTICAL))
@@ -56,7 +63,16 @@ class RecyclerFragment : Fragment(R.layout.fragment_recycler) {
     class AvatarAdapter(private val data: Array<String>) :
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-        override fun getItemCount() = data.size
+        companion object {
+
+            private const val TYPE_GLIDE = 0
+            private const val TYPE_PICASSO = 1
+            private const val TYPE_COIL = 2
+        }
+
+        override fun getItemCount(): Int {
+            return data.size
+        }
 
         override fun getItemViewType(position: Int) = when {
             position <= 100 -> TYPE_GLIDE
@@ -67,13 +83,15 @@ class RecyclerFragment : Fragment(R.layout.fragment_recycler) {
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
-        ) = CompoundViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.item_compound,
-                parent,
-                false
-            ) as CompoundTextView
-        )
+        ): CompoundViewHolder {
+            return CompoundViewHolder(
+                LayoutInflater.from(parent.context).inflate(
+                    R.layout.item_compound,
+                    parent,
+                    false
+                ) as CompoundTextView
+            )
+        }
 
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -84,6 +102,7 @@ class RecyclerFragment : Fragment(R.layout.fragment_recycler) {
                 TYPE_PICASSO -> "PICASSO"
                 else -> "COIL"
             }
+
 //          because we change (resize for eg) Drawable out of CompoundTextView (via image loader)
 //          it's important to use isUseCustomTransformation=true in xml
             with((holder as CompoundViewHolder).compoundView) {
@@ -95,6 +114,7 @@ class RecyclerFragment : Fragment(R.layout.fragment_recycler) {
         private fun CompoundTextView.loadImage(url: String, type: Int) {
             val placeholder = context.drawable(R.drawable.ic_placeholder)!!
             val size = drawableCustomSize
+
             when (type) {
                 TYPE_GLIDE -> {
                     GlideApp.with(context)
@@ -112,63 +132,54 @@ class RecyclerFragment : Fragment(R.layout.fragment_recycler) {
                         .into(PicassoCompoundTarget(this))
                 }
                 else -> {
-                    Coil.load(context, url) {
-                        size(size)
-                        placeholder(placeholder)
-                        target(
+                    LoadRequest.Builder(context)
+                        .data(url)
+                        .size(size)
+                        .placeholder(placeholder)
+                        .target(
                             onStart = { setDrawables(start = it) },
                             onSuccess = { setDrawables(start = it) }
                         )
-                    }
                 }
             }
-
         }
 
-        companion object {
-
-            private const val TYPE_GLIDE = 0
-            private const val TYPE_PICASSO = 1
-            private const val TYPE_COIL = 2
-        }
-
-        class CompoundViewHolder(val compoundView: CompoundTextView) :
-            RecyclerView.ViewHolder(compoundView)
-
     }
 
-    class GlideCompoundTarget(view: CompoundTextView) :
-        CustomViewTarget<CompoundTextView, Drawable>(view) {
+    class CompoundViewHolder(val compoundView: CompoundTextView) :
+        RecyclerView.ViewHolder(compoundView)
 
-        override fun onResourceCleared(placeholder: Drawable?) =
-            view.setDrawables(start = placeholder)
+}
 
-        override fun onLoadFailed(errorDrawable: Drawable?) =
-            view.setDrawables(start = errorDrawable)
+class GlideCompoundTarget(view: CompoundTextView) :
+    CustomViewTarget<CompoundTextView, Drawable>(view) {
 
-        override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) =
-            view.setDrawables(start = resource)
-
+    override fun onResourceCleared(placeholder: Drawable?) {
+        view.setDrawables(start = placeholder)
     }
 
-    class PicassoCompoundTarget(private val view: CompoundTextView) : Target {
-
-        override fun onPrepareLoad(placeHolderDrawable: Drawable?) =
-            view.setDrawables(start = placeHolderDrawable)
-
-        override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) =
-            view.setDrawables(start = errorDrawable)
-
-        override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) =
-            view.setDrawables(start = BitmapDrawable(view.context.resources, bitmap))
-
+    override fun onLoadFailed(errorDrawable: Drawable?) {
+        view.setDrawables(start = errorDrawable)
     }
 
-    companion object {
-
-        private const val ITEM_COUNT = 300
-
-        fun newInstance() = RecyclerFragment()
-
+    override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+        view.setDrawables(start = resource)
     }
+
+}
+
+class PicassoCompoundTarget(private val view: CompoundTextView) : Target {
+
+    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+        view.setDrawables(start = placeHolderDrawable)
+    }
+
+    override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+        view.setDrawables(start = errorDrawable)
+    }
+
+    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+        view.setDrawables(start = BitmapDrawable(view.context.resources, bitmap))
+    }
+
 }

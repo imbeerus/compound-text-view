@@ -1,57 +1,36 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
+apply from: rootProject.file('gradle/android/app.gradle')
+apply from: rootProject.file('gradle/kotlin/target.gradle')
+apply from: rootProject.file('gradle/deps.gradle')
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion versions.compileSdk
 
     defaultConfig {
-        applicationId "com.lockwood.compoundemo"
-        minSdkVersion 15
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
-        vectorDrawables.useSupportLibrary = true
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
+        minSdkVersion 24
     }
 
     dataBinding {
         enabled = true
     }
-
-    buildTypes {
-        debug {
-            applicationIdSuffix ".debug"
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.2.0'
-    implementation 'com.google.android.material:material:1.2.0-alpha06'
-    implementation "androidx.viewpager2:viewpager2:1.0.0"
-    implementation project(path: ':compound-library')
+    implementation(
+            deps.kotlin.stdlib,
+            deps.android.appcompat,
+            deps.android.material,
+            deps.android.viewpager2
+    )
 
     // An image loading and caching library for Android focused on smooth scrolling https://bumptech.github.io/glide/
-    implementation 'com.github.bumptech.glide:glide:4.11.0'
-    kapt 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation deps.glide.glide
+    kapt deps.glide.compiler
 
     // Image loading for Android backed by Kotlin Coroutines. https://coil-kt.github.io/coil/
-    implementation 'io.coil-kt:coil:0.10.1'
+    implementation deps.coil.coil
 
     // A powerful image downloading and caching library for Android https://square.github.io/picasso/
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation deps.picasso.picasso
+
+    implementation project(':compound-library')
 }

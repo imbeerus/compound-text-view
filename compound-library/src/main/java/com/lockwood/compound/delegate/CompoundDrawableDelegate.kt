@@ -22,7 +22,9 @@ internal class CompoundDrawableDelegate<T>(
     override fun getValue(
         thisRef: Any?,
         property: KProperty<*>
-    ): T = value ?: default
+    ): T {
+        return value ?: default
+    }
 
     /**
      * Set [value] and then update state of compound drawables

@@ -18,16 +18,13 @@ package com.lockwood.compound
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.TypedArray
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.MotionEvent
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.graphics.drawable.updateBounds
 import androidx.core.widget.addTextChangedListener
 import com.lockwood.compound.Position.BOTTOM
@@ -37,6 +34,7 @@ import com.lockwood.compound.Position.TOP
 import com.lockwood.compound.delegate.CompoundArrayDelegate
 import com.lockwood.compound.delegate.CompoundArrayPositionDelegate
 import com.lockwood.compound.delegate.CompoundDrawableDelegate
+import com.lockwood.compound.extenions.*
 import com.lockwood.compound.transofrmation.GravityTransformation
 import com.lockwood.compound.transofrmation.SizeTransformation
 import com.lockwood.compound.transofrmation.TintTransformation
@@ -448,10 +446,12 @@ open class CompoundTextView @JvmOverloads constructor(
         /**
          * Current compound drawables
          */
-        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            compoundDrawablesRelative
-        } else {
-            compoundDrawables
+        get() {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                compoundDrawablesRelative
+            } else {
+                compoundDrawables
+            }
         }
 
     /**
@@ -493,144 +493,128 @@ open class CompoundTextView @JvmOverloads constructor(
          */
         set
 
-    /**
-     * Current drawable width or zero if null
-     */
-    private val Drawable?.width: Int
-        /**
-         * Current drawable width
-         */
-        get() = this?.intrinsicWidth ?: 0
-
-    /**
-     * Current drawable height or zero if null
-     */
-    private val Drawable?.height: Int
-        /**
-         * Current drawable width
-         */
-        get() = this?.intrinsicHeight ?: 0
-
-    /**
-     * Is device in right to left configuration
-     */
-    private val Context.isRtl
-        get() = resources.getBoolean(R.bool.is_right_to_left)
-
     private var yOffset: Int = 0
     private var xOffset: Int = 0
 
     // fetch attrs and update compound drawables
     init {
-        context.theme.obtainStyledAttributes(
-            attrs,
+        fetchAttrs(
+            context,
             R.styleable.CompoundTextView,
-            defStyleAttr,
-            0
-        ).apply {
-            try {
-                drawableGravity = getInt(
-                    R.styleable.CompoundTextView_drawableGravity,
-                    DEF_GRAVITY
-                )
-                drawableStartGravity = getInt(
-                    R.styleable.CompoundTextView_drawableStartGravity,
-                    drawableGravity
-                )
-                drawableEndGravity = getInt(
-                    R.styleable.CompoundTextView_drawableEndGravity,
-                    drawableGravity
-                )
-                drawableTopGravity = getInt(
-                    R.styleable.CompoundTextView_drawableTopGravity,
-                    drawableGravity
-                )
-                drawableBottomGravity = getInt(
-                    R.styleable.CompoundTextView_drawableBottomGravity,
-                    drawableGravity
-                )
+            set = attrs,
+            defStyleAttr = defStyleAttr
+        ) {
 
-                drawablePadding = getDimensionPixelSize(
-                    R.styleable.CompoundTextView_drawablePadding,
-                    compoundDrawablePadding
-                )
-                drawableStartPadding = getDimensionPixelSize(
-                    R.styleable.CompoundTextView_drawableStartPadding,
-                    drawablePadding
-                )
-                drawableEndPadding = getDimensionPixelSize(
-                    R.styleable.CompoundTextView_drawableEndPadding,
-                    drawablePadding
-                )
-                drawableTopPadding = getDimensionPixelSize(
-                    R.styleable.CompoundTextView_drawableTopPadding,
-                    drawablePadding
-                )
-                drawableBottomPadding = getDimensionPixelSize(
-                    R.styleable.CompoundTextView_drawableBottomPadding,
-                    drawablePadding
-                )
+            //region Gravity
+            drawableGravity = getInt(
+                R.styleable.CompoundTextView_drawableGravity,
+                DEF_GRAVITY
+            )
+            drawableStartGravity = getInt(
+                R.styleable.CompoundTextView_drawableStartGravity,
+                drawableGravity
+            )
+            drawableEndGravity = getInt(
+                R.styleable.CompoundTextView_drawableEndGravity,
+                drawableGravity
+            )
+            drawableTopGravity = getInt(
+                R.styleable.CompoundTextView_drawableTopGravity,
+                drawableGravity
+            )
+            drawableBottomGravity = getInt(
+                R.styleable.CompoundTextView_drawableBottomGravity,
+                drawableGravity
+            )
+            //endregion
 
-                drawableCustomSize = getDimensionPixelSize(
-                    R.styleable.CompoundTextView_drawableSize,
-                    DEF_SIZE
-                )
-                drawableStartCustomSize = getDimensionPixelSize(
-                    R.styleable.CompoundTextView_drawableStartSize,
-                    drawableCustomSize
-                )
-                drawableEndCustomSize = getDimensionPixelSize(
-                    R.styleable.CompoundTextView_drawableEndSize,
-                    drawableCustomSize
-                )
-                drawableTopCustomSize = getDimensionPixelSize(
-                    R.styleable.CompoundTextView_drawableTopSize,
-                    drawableCustomSize
-                )
-                drawableBottomCustomSize = getDimensionPixelSize(
-                    R.styleable.CompoundTextView_drawableBottomSize,
-                    drawableCustomSize
-                )
+            //region Padding
+            drawablePadding = getDimensionPixelSize(
+                R.styleable.CompoundTextView_drawablePadding,
+                compoundDrawablePadding
+            )
+            drawableStartPadding = getDimensionPixelSize(
+                R.styleable.CompoundTextView_drawableStartPadding,
+                drawablePadding
+            )
+            drawableEndPadding = getDimensionPixelSize(
+                R.styleable.CompoundTextView_drawableEndPadding,
+                drawablePadding
+            )
+            drawableTopPadding = getDimensionPixelSize(
+                R.styleable.CompoundTextView_drawableTopPadding,
+                drawablePadding
+            )
+            drawableBottomPadding = getDimensionPixelSize(
+                R.styleable.CompoundTextView_drawableBottomPadding,
+                drawablePadding
+            )
+            //endregion
 
-                drawableTint = getResourceId(
-                    R.styleable.CompoundTextView_drawableTint,
-                    DEF_TINT_COLOR
-                )
-                drawableStartTint = getResourceId(
-                    R.styleable.CompoundTextView_drawableStartTint,
-                    drawableTint
-                )
-                drawableEndTint = getResourceId(
-                    R.styleable.CompoundTextView_drawableEndTint,
-                    drawableTint
-                )
-                drawableTopTint = getResourceId(
-                    R.styleable.CompoundTextView_drawableTopTint,
-                    drawableTint
-                )
-                drawableBottomTint = getResourceId(
-                    R.styleable.CompoundTextView_drawableBottomTint,
-                    drawableTint
-                )
+            //region Size
+            drawableCustomSize = getDimensionPixelSize(
+                R.styleable.CompoundTextView_drawableSize,
+                DEF_SIZE
+            )
+            drawableStartCustomSize = getDimensionPixelSize(
+                R.styleable.CompoundTextView_drawableStartSize,
+                drawableCustomSize
+            )
+            drawableEndCustomSize = getDimensionPixelSize(
+                R.styleable.CompoundTextView_drawableEndSize,
+                drawableCustomSize
+            )
+            drawableTopCustomSize = getDimensionPixelSize(
+                R.styleable.CompoundTextView_drawableTopSize,
+                drawableCustomSize
+            )
+            drawableBottomCustomSize = getDimensionPixelSize(
+                R.styleable.CompoundTextView_drawableBottomSize,
+                drawableCustomSize
+            )
+            //endregion
 
-                useCustomTransformation = getBoolean(
-                    R.styleable.CompoundTextView_useCustomTransformation,
-                    DEF_USE_CUSTOM_TRANSFORMATION
-                )
+            //region Tint
+            drawableTint = getResourceId(
+                R.styleable.CompoundTextView_drawableTint,
+                DEF_TINT_COLOR
+            )
+            drawableStartTint = getResourceId(
+                R.styleable.CompoundTextView_drawableStartTint,
+                drawableTint
+            )
+            drawableEndTint = getResourceId(
+                R.styleable.CompoundTextView_drawableEndTint,
+                drawableTint
+            )
+            drawableTopTint = getResourceId(
+                R.styleable.CompoundTextView_drawableTopTint,
+                drawableTint
+            )
+            drawableBottomTint = getResourceId(
+                R.styleable.CompoundTextView_drawableBottomTint,
+                drawableTint
+            )
+            //endregion
 
-                handleClickWithinDrawableBounds = getBoolean(
-                    R.styleable.CompoundTextView_handleClickWithinDrawableBounds,
-                    DEF_HANDLE_CLICK_WITHIN_DRAWABLE_BOUNDS
-                )
+            useCustomTransformation = getBoolean(
+                R.styleable.CompoundTextView_useCustomTransformation,
+                DEF_USE_CUSTOM_TRANSFORMATION
+            )
 
-                startDrawable = getDrawableCompat(R.styleable.CompoundTextView_drawableStart)
-                endDrawable = getDrawableCompat(R.styleable.CompoundTextView_drawableEnd)
-                topDrawable = getDrawableCompat(R.styleable.CompoundTextView_drawableTop)
-                bottomDrawable = getDrawableCompat(R.styleable.CompoundTextView_drawableBottom)
-            } finally {
-                recycle()
-            }
+            handleClickWithinDrawableBounds = getBoolean(
+                R.styleable.CompoundTextView_handleClickWithinDrawableBounds,
+                DEF_HANDLE_CLICK_WITHIN_DRAWABLE_BOUNDS
+            )
+
+            //region Drawable
+            startDrawable = getDrawableCompat(context, R.styleable.CompoundTextView_drawableStart)
+            endDrawable = getDrawableCompat(context, R.styleable.CompoundTextView_drawableEnd)
+            topDrawable = getDrawableCompat(context, R.styleable.CompoundTextView_drawableTop)
+            bottomDrawable = getDrawableCompat(context, R.styleable.CompoundTextView_drawableBottom)
+            //endregion
         }
+
         // we use our own drawables padding in GravityDrawable
         compoundDrawablePadding = 0
         addTextChangedListener { updateCompoundDrawables() }
@@ -710,19 +694,19 @@ open class CompoundTextView @JvmOverloads constructor(
                 if (touchedDrawables.any { it }) {
                     when {
                         touchedDrawables[START] -> {
-                            val drawable = drawables[START]!!
+                            val drawable = requireNotNull(drawables[START])
                             listener.onStartDrawableClick(this, drawable, e)
                         }
                         touchedDrawables[TOP] -> {
-                            val drawable = drawables[TOP]!!
+                            val drawable = requireNotNull(drawables[TOP])
                             listener.onTopDrawableClick(this, drawable, e)
                         }
                         touchedDrawables[END] -> {
-                            val drawable = drawables[END]!!
+                            val drawable = requireNotNull(drawables[END])
                             listener.onEndDrawableClick(this, drawable, e)
                         }
                         touchedDrawables[BOTTOM] -> {
-                            val drawable = drawables[BOTTOM]!!
+                            val drawable = requireNotNull(drawables[BOTTOM])
                             listener.onBottomDrawableClick(this, drawable, e)
                         }
                     }
@@ -797,6 +781,7 @@ open class CompoundTextView @JvmOverloads constructor(
         val drawable = drawables[position]
         val x = event.x.toInt()
         val y = event.y.toInt()
+
         return if (drawable != null) {
             val gravityDrawable = drawable as GravityDrawable
             if (handleClickWithinDrawableBounds) {
@@ -932,18 +917,6 @@ open class CompoundTextView @JvmOverloads constructor(
         }
     }
 
-    /**
-     * Safe fetch [Drawable] from [AppCompatResources]
-     *
-     * @param index of drawable to fetch
-     * @return drawable from resource or null if any exception is appear
-     */
-    private fun TypedArray.getDrawableCompat(index: Int) = try {
-        val resId = getResourceIdOrThrow(index)
-        AppCompatResources.getDrawable(context, resId)
-    } catch (e: Exception) {
-        null
-    }
 
     //region Drawable property functions
     /**
@@ -956,7 +929,9 @@ open class CompoundTextView @JvmOverloads constructor(
     private inline fun <T> updateDrawablesProperty(
         default: () -> T
     ): CompoundDrawableDelegate<T> {
-        return CompoundDrawableDelegate(default()) { updateCompoundDrawables() }
+        return CompoundDrawableDelegate(
+            default()
+        ) { updateCompoundDrawables() }
     }
 
     /**
@@ -997,7 +972,10 @@ open class CompoundTextView @JvmOverloads constructor(
     private inline fun commonDrawableGravityProperty(
         default: () -> Int = { DEF_GRAVITY }
     ): CompoundArrayDelegate<Int> {
-        return CompoundArrayDelegate(drawablesGravity, default()) { updateCompoundDrawables() }
+        return CompoundArrayDelegate(
+            drawablesGravity,
+            default()
+        ) { updateCompoundDrawables() }
     }
 
     /**
@@ -1023,7 +1001,10 @@ open class CompoundTextView @JvmOverloads constructor(
     private inline fun commonDrawablePaddingProperty(
         default: () -> Int = { DEF_PADDING }
     ): CompoundArrayDelegate<Int> {
-        return CompoundArrayDelegate(drawablesPadding, default()) { updateCompoundDrawables() }
+        return CompoundArrayDelegate(
+            drawablesPadding,
+            default()
+        ) { updateCompoundDrawables() }
     }
 
     /**
@@ -1049,7 +1030,10 @@ open class CompoundTextView @JvmOverloads constructor(
     private fun commonDrawableTintProperty(
         default: () -> Int = { DEF_TINT_COLOR }
     ): CompoundArrayDelegate<Int> {
-        return CompoundArrayDelegate(drawablesTint, default()) { updateCompoundDrawables() }
+        return CompoundArrayDelegate(
+            drawablesTint,
+            default()
+        ) { updateCompoundDrawables() }
     }
 
     /**
@@ -1075,15 +1059,20 @@ open class CompoundTextView @JvmOverloads constructor(
     private fun commonDrawableSizeProperty(
         default: () -> Int = { DEF_SIZE }
     ): CompoundArrayDelegate<Int> {
-        return CompoundArrayDelegate(drawablesSize, default()) { updateCompoundDrawables() }
+        return CompoundArrayDelegate(
+            drawablesSize,
+            default()
+        ) { updateCompoundDrawables() }
     }
     //endregion
 
     private inline fun updateDrawables(
-        update: Drawable.(Int) -> Unit = {}
-    ) = drawables.forEachIndexed { position, drawable ->
-        if (drawable != null) {
-            drawables[position]!!.update(position)
+        onUpdate: Drawable.(Int) -> Unit = {}
+    ) {
+        drawables.forEachIndexed { position, drawable ->
+            if (drawable != null) {
+                requireNotNull(drawables[position]).onUpdate(position)
+            }
         }
     }
 

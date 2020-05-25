@@ -17,10 +17,12 @@ Positions for drawable in TextView
         /**
          * Current compound drawables
          */
-        get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            compoundDrawablesRelative
-        } else {
-            compoundDrawables
+        get() {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                compoundDrawablesRelative
+            } else {
+                compoundDrawables
+            }
         }
 ```
 

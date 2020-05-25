@@ -25,7 +25,9 @@ internal class CompoundArrayDelegate<T>(
     override fun getValue(
         thisRef: Any?,
         property: KProperty<*>
-    ): T = value ?: default
+    ): T {
+        return value ?: default
+    }
 
     /**
      * Set [value], set same value for all elements in [array], then update state of compound drawables

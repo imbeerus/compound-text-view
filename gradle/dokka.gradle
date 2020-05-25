@@ -1,0 +1,21 @@
+apply plugin: 'org.jetbrains.dokka'
+
+dokka {
+    outputFormat = "gfm"
+    outputDirectory = "docs"
+    cacheRoot = 'default'
+
+    configuration {
+        includeNonPublic = false
+        skipDeprecated = true
+        reportUndocumented = true
+        skipEmptyPackages = true
+        jdkVersion = 8
+
+        sourceLink {
+            path = "src/main/java"
+            url = "https://github.com/lndmflngs/compound-text-view/tree/master/compound-library/src/main/java"
+            lineSuffix = "#L"
+        }
+    }
+}

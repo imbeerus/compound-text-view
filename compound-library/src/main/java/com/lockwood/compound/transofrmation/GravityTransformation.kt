@@ -22,12 +22,13 @@ class GravityTransformation(
     private val Context.isRtl
         get() = resources.getBoolean(R.bool.is_right_to_left)
 
-    override fun performTransformation(source: Drawable, context: Context) =
-        GravityDrawable(
+    override fun performTransformation(source: Drawable, context: Context): GravityDrawable {
+        return GravityDrawable(
             source = source,
             padding = padding,
             gravity = gravity,
             isRtl = context.isRtl
         )
+    }
 
 }

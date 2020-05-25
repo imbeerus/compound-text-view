@@ -44,6 +44,11 @@ class GravityDrawable(
     private val isRtl: Boolean
 ) : DrawableWrapper(source) {
 
+    companion object {
+
+        private val TAG = GravityDrawable::class.java.simpleName
+    }
+
     /**
      * Width of source drawable
      */
@@ -159,8 +164,10 @@ class GravityDrawable(
     private fun fetchSimpleGravityBounds(paddingBounds: Rect): Rect {
         val hPosition = fetchHorizontalPositions(paddingBounds, gravity)
         val vPosition = fetchVerticalPositions(paddingBounds, gravity)
+
         val (left: Int, right: Int) = hPosition.run { get(0) to get(1) }
         val (top: Int, bottom: Int) = vPosition.run { get(0) to get(1) }
+
         return Rect(left, top, right, bottom)
     }
 
@@ -181,10 +188,13 @@ class GravityDrawable(
                 }
             }
         }
+
         val hPosition = mutableListOf(0, 0)
         val vPosition = mutableListOf(0, 0)
+
         val hPositions = gravityToSet[0].map { fetchHorizontalPositions(paddingBounds, it) }
         val vPositions = gravityToSet[1].map { fetchVerticalPositions(paddingBounds, it) }
+
         hPositions.forEach {
             hPosition[0] = hPosition[0].plus(it[0])
             hPosition[1] = hPosition[1].plus(it[1])
@@ -193,6 +203,7 @@ class GravityDrawable(
             vPosition[0] = vPosition[0].plus(it[0])
             vPosition[1] = vPosition[1].plus(it[1])
         }
+
         // if nothing is found use default size
         if (hPosition[1] == 0) {
             hPosition[1] = sourceWidth
@@ -200,8 +211,10 @@ class GravityDrawable(
         if (vPosition[1] == 0) {
             vPosition[1] = sourceHeight
         }
+
         val (left: Int, right: Int) = hPosition.run { get(0) to get(1) }
         val (top: Int, bottom: Int) = vPosition.run { get(0) to get(1) }
+
         return Rect(left, top, right, bottom)
     }
 
@@ -262,9 +275,5 @@ class GravityDrawable(
         return intArrayOf(left, right)
     }
 
-    companion object {
-
-        private val TAG = GravityDrawable::class.java.simpleName
-    }
 
 }

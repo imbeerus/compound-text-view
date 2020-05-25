@@ -22,7 +22,9 @@ internal class CompoundArrayPositionDelegate<T>(
     override fun getValue(
         thisRef: Any?,
         property: KProperty<*>
-    ): T = array[position]
+    ): T {
+        return array[position]
+    }
 
     /**
      * Set value in [array] at [position] and then update state of compound drawables
