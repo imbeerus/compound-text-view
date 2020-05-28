@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable
 import com.lockwood.compound.GravityDrawable
 import com.lockwood.compound.Position
 import com.lockwood.compound.R
+import com.lockwood.drawable.transformation.DrawableTransformation
 
 /**
  * A class for performing gravity transformation on a drawable
@@ -14,7 +15,7 @@ import com.lockwood.compound.R
  * @see Position for available positions
  * @see GravityDrawable.gravityToUse for available gravities
  */
-class GravityTransformation(
+internal class GravityTransformation(
     private val gravity: Int,
     private val padding: Int
 ) : DrawableTransformation {

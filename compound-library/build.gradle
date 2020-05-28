@@ -8,6 +8,7 @@ dependencies {
     implementation(
             deps.kotlin.stdlib,
             deps.android.appcompat,
+            deps.android.transformation,
             deps.android.ktx
     )
 }

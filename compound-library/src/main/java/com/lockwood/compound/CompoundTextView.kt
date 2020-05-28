@@ -36,8 +36,9 @@ import com.lockwood.compound.delegate.CompoundArrayPositionDelegate
 import com.lockwood.compound.delegate.CompoundDrawableDelegate
 import com.lockwood.compound.extenions.*
 import com.lockwood.compound.transofrmation.GravityTransformation
-import com.lockwood.compound.transofrmation.SizeTransformation
-import com.lockwood.compound.transofrmation.TintTransformation
+import com.lockwood.drawable.transformation.SizeTransformation
+import com.lockwood.drawable.transformation.TintTransformation
+import com.lockwood.drawable.transformation.extenions.buildDrawable
 import kotlin.math.abs
 
 /**
@@ -739,22 +740,29 @@ open class CompoundTextView @JvmOverloads constructor(
         val changedDrawables = gravityDrawables.mapIndexed { position, source ->
             if (source != null) {
 
-                // apply custom transformation's to drawables (if allow to)
-                val drawable = if (!useCustomTransformation) {
-                    val size = drawablesSize[position]
-                    val tint = drawablesTint[position]
+                //region Default Transformations
+                val size = drawablesSize[position]
+                val tint = drawablesTint[position]
 
-                    val tinted = TintTransformation(tint).performTransformation(source, context)
-                    SizeTransformation(size).performTransformation(tinted, context)
-                } else {
-                    source
-                }
+                val defaultTransformations = arrayOf(
+                    TintTransformation(tint),
+                    SizeTransformation(size)
+                )
+                // endregion
 
-                // apply GravityTransformation
+                //region Gravity Transformations
                 val padding = drawablesPadding[position]
                 val gravity = drawablesGravity[position]
 
-                GravityTransformation(gravity, padding).performTransformation(drawable, context)
+                val gravityTransformation = GravityTransformation(gravity, padding)
+                // endregion
+
+                buildDrawable(context, source) {
+                    if (!useCustomTransformation) {
+                        defaultTransformations.forEach { append(it) }
+                    }
+                    append(gravityTransformation)
+                }
             } else {
                 null
             }
