@@ -53,7 +53,9 @@ import kotlin.math.abs
  */
 @SuppressLint("Recycle", "ResourceType")
 open class CompoundTextView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = android.R.attr.textViewStyle
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = android.R.attr.textViewStyle
 ) : AppCompatTextView(context, attrs, defStyleAttr) {
 
     companion object {
@@ -61,50 +63,50 @@ open class CompoundTextView @JvmOverloads constructor(
         private val TAG = CompoundTextView::class.java.simpleName
 
         /** @suppress */
-        const val DEF_USE_CUSTOM_TRANSFORMATION = false
+        const val DEFAULT_USE_CUSTOM_TRANSFORMATION = false
 
         /** @suppress */
-        const val DEF_HANDLE_CLICK_WITHIN_DRAWABLE_BOUNDS = false
+        const val DEFAULT_HANDLE_CLICK_WITHIN_DRAWABLE_BOUNDS = false
 
         /** @suppress */
-        const val DEF_GRAVITY = Gravity.NO_GRAVITY
+        const val DEFAULT_GRAVITY = Gravity.NO_GRAVITY
 
         /** @suppress */
-        const val DEF_PADDING = 0
+        const val DEFAULT_PADDING = 0
 
         /** @suppress */
-        const val DEF_SIZE = 0
+        const val DEFAULT_SIZE = 0
 
         /** @suppress */
-        const val DEF_TINT_COLOR = -1
+        const val DEFAULT_TINT_COLOR = -1
 
-        private const val DEF_DRAWABLES_SIZE = 4
+        private const val DEFAULT_DRAWABLES_COUNT = 4
     }
 
     /**
      * Array of [Drawable] which will be transformed and shown
      */
-    protected val gravityDrawables = arrayOfNulls<Drawable>(DEF_DRAWABLES_SIZE)
+    protected val gravityDrawables = arrayOfNulls<Drawable>(DEFAULT_DRAWABLES_COUNT)
 
     /**
      * Array of [Int] gravity which will be used in [GravityTransformation]
      */
-    protected val drawablesGravity = Array(DEF_DRAWABLES_SIZE) { DEF_GRAVITY }
+    protected val drawablesGravity = Array(DEFAULT_DRAWABLES_COUNT) { DEFAULT_GRAVITY }
 
     /**
      * Array of [Int] padding in Px size which will be used in [GravityTransformation]
      */
-    protected val drawablesPadding = Array(DEF_DRAWABLES_SIZE) { DEF_PADDING }
+    protected val drawablesPadding = Array(DEFAULT_DRAWABLES_COUNT) { DEFAULT_PADDING }
 
     /**
      * Array of ColorRes [Int] tint which will be used in [TintTransformation]
      */
-    protected val drawablesTint = Array(DEF_DRAWABLES_SIZE) { DEF_TINT_COLOR }
+    protected val drawablesTint = Array(DEFAULT_DRAWABLES_COUNT) { DEFAULT_TINT_COLOR }
 
     /**
      * Array of [Int] size in Px size which will be used in [SizeTransformation]
      */
-    protected val drawablesSize = Array(DEF_DRAWABLES_SIZE) { DEF_SIZE }
+    protected val drawablesSize = Array(DEFAULT_DRAWABLES_COUNT) { DEFAULT_SIZE }
 
     /**
      * [Drawable] to appear to the start of the view
@@ -462,7 +464,7 @@ open class CompoundTextView @JvmOverloads constructor(
      *
      * @attr [R.styleable.CompoundTextView_useCustomTransformation]
      */
-    protected var useCustomTransformation by updateDrawablesProperty { DEF_USE_CUSTOM_TRANSFORMATION }
+    protected var useCustomTransformation by updateDrawablesProperty { DEFAULT_USE_CUSTOM_TRANSFORMATION }
         /**
          * Using default or custom transformations for drawables before [GravityTransformation]
          */
@@ -482,7 +484,7 @@ open class CompoundTextView @JvmOverloads constructor(
      * @attr [R.styleable.CompoundTextView_handleClickWithinDrawableBounds]
      */
 
-    protected var handleClickWithinDrawableBounds by updateDrawablesProperty { DEF_HANDLE_CLICK_WITHIN_DRAWABLE_BOUNDS }
+    protected var handleClickWithinDrawableBounds by updateDrawablesProperty { DEFAULT_HANDLE_CLICK_WITHIN_DRAWABLE_BOUNDS }
         /**
          * Handle clicks on blank space or on drawable (source) itself
          */
@@ -508,7 +510,7 @@ open class CompoundTextView @JvmOverloads constructor(
             //region Gravity
             drawableGravity = getInt(
                 R.styleable.CompoundTextView_drawableGravity,
-                DEF_GRAVITY
+                DEFAULT_GRAVITY
             )
             drawableStartGravity = getInt(
                 R.styleable.CompoundTextView_drawableStartGravity,
@@ -554,7 +556,7 @@ open class CompoundTextView @JvmOverloads constructor(
             //region Size
             drawableCustomSize = getDimensionPixelSize(
                 R.styleable.CompoundTextView_drawableSize,
-                DEF_SIZE
+                DEFAULT_SIZE
             )
             drawableStartCustomSize = getDimensionPixelSize(
                 R.styleable.CompoundTextView_drawableStartSize,
@@ -577,7 +579,7 @@ open class CompoundTextView @JvmOverloads constructor(
             //region Tint
             drawableTint = getResourceId(
                 R.styleable.CompoundTextView_drawableTint,
-                DEF_TINT_COLOR
+                DEFAULT_TINT_COLOR
             )
             drawableStartTint = getResourceId(
                 R.styleable.CompoundTextView_drawableStartTint,
@@ -599,12 +601,12 @@ open class CompoundTextView @JvmOverloads constructor(
 
             useCustomTransformation = getBoolean(
                 R.styleable.CompoundTextView_useCustomTransformation,
-                DEF_USE_CUSTOM_TRANSFORMATION
+                DEFAULT_USE_CUSTOM_TRANSFORMATION
             )
 
             handleClickWithinDrawableBounds = getBoolean(
                 R.styleable.CompoundTextView_handleClickWithinDrawableBounds,
-                DEF_HANDLE_CLICK_WITHIN_DRAWABLE_BOUNDS
+                DEFAULT_HANDLE_CLICK_WITHIN_DRAWABLE_BOUNDS
             )
 
             //region Drawable
@@ -970,7 +972,7 @@ open class CompoundTextView @JvmOverloads constructor(
      * @return property that store value independently
      */
     private inline fun commonDrawableGravityProperty(
-        default: () -> Int = { DEF_GRAVITY }
+        default: () -> Int = { DEFAULT_GRAVITY }
     ): CompoundArrayDelegate<Int> {
         return CompoundArrayDelegate(
             drawablesGravity,
@@ -999,7 +1001,7 @@ open class CompoundTextView @JvmOverloads constructor(
      * @return property that store padding value independently
      */
     private inline fun commonDrawablePaddingProperty(
-        default: () -> Int = { DEF_PADDING }
+        default: () -> Int = { DEFAULT_PADDING }
     ): CompoundArrayDelegate<Int> {
         return CompoundArrayDelegate(
             drawablesPadding,
@@ -1028,7 +1030,7 @@ open class CompoundTextView @JvmOverloads constructor(
      * @return property that store tint value independently
      */
     private fun commonDrawableTintProperty(
-        default: () -> Int = { DEF_TINT_COLOR }
+        default: () -> Int = { DEFAULT_TINT_COLOR }
     ): CompoundArrayDelegate<Int> {
         return CompoundArrayDelegate(
             drawablesTint,
@@ -1057,7 +1059,7 @@ open class CompoundTextView @JvmOverloads constructor(
      * @return property that store size value independently
      */
     private fun commonDrawableSizeProperty(
-        default: () -> Int = { DEF_SIZE }
+        default: () -> Int = { DEFAULT_SIZE }
     ): CompoundArrayDelegate<Int> {
         return CompoundArrayDelegate(
             drawablesSize,
