@@ -3,12 +3,6 @@ apply from: rootProject.file('gradle/kotlin/target.gradle')
 apply from: rootProject.file('gradle/deps.gradle')
 
 android {
-    compileSdkVersion versions.compileSdk
-
-    defaultConfig {
-        minSdkVersion 24
-    }
-
     dataBinding {
         enabled = true
     }
