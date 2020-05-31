@@ -1,16 +1,12 @@
 package com.lockwood.compoundemo
 
-import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
-import com.lockwood.compoundemo.fragment.RecyclerFragment
-import com.lockwood.compoundemo.fragment.ShowcaseFragment
+import com.lockwood.compoundemo.fragment.recycler.RecyclerFragment
+import com.lockwood.compoundemo.fragment.showcase.ShowcaseFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
@@ -46,7 +42,3 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     }
 }
 
-fun Context.drawable(@DrawableRes res: Int): Drawable? = AppCompatResources.getDrawable(this, res)
-
-val Fragment.ctx
-    get() = requireContext()
