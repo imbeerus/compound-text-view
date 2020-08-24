@@ -684,10 +684,11 @@ open class CompoundTextView @JvmOverloads constructor(
      * to compound drawables and view itself
      */
     fun setCompoundDrawablesTouchListener(listener: CompoundViewClickListener) =
-        setOnTouchListener { _, e ->
+        setOnTouchListener { v, e ->
             // prevent calling onViewClick if one of the drawables was clicked
             val isClick = e.eventTime == e.downTime
             return@setOnTouchListener if (isClick) {
+                v.performClick()
 
                 val positions = arrayOf(START, TOP, END, BOTTOM)
                 val touchedDrawables = positions.map { isDrawableClicked(it, e) }
@@ -733,7 +734,7 @@ open class CompoundTextView @JvmOverloads constructor(
         // check if is nothing to update
         val isNothingToUpdate = gravityDrawables.filterNotNull().isNullOrEmpty()
         if (isNothingToUpdate) {
-            setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null)
+            updateCompoundDrawables(null, null, null, null)
             return
         }
 
@@ -768,11 +769,12 @@ open class CompoundTextView @JvmOverloads constructor(
             }
         }
 
-        setCompoundDrawablesRelativeWithIntrinsicBounds(
-            changedDrawables[START],
-            changedDrawables[TOP],
-            changedDrawables[END],
-            changedDrawables[BOTTOM]
+
+        updateCompoundDrawables(
+            start = changedDrawables[START],
+            top = changedDrawables[TOP],
+            end = changedDrawables[END],
+            bottom = changedDrawables[BOTTOM]
         )
     }
 
